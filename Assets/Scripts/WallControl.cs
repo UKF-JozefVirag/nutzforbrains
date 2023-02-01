@@ -9,22 +9,18 @@ public class WallControl : MonoBehaviour
     [SerializeField]
     public int hpPerLevel;
 
-    public TMP_Text textHp;
 
     // Start is called before the first frame update
     void Start()
     {
         hpPerLevel = PlayerPrefs.GetInt("U_Walls");
         currentHp = (10 + PlayerPrefs.GetInt("U_Repair") * hpPerLevel) - 5;
-        textHp = GetComponentInChildren<TMP_Text>();
-        if (textHp == null) Debug.Log("xd");
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        textHp.SetText("" + currentHp);
 
         if (Input.GetMouseButtonDown(0))
         {

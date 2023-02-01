@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+
+    [SerializeField]
+    public TMP_Text textHp1, textHp2, textHp3, textHp4;
 
     private void Awake()
     {
