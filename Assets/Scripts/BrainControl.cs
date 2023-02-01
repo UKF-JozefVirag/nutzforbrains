@@ -21,11 +21,14 @@ public class BrainControl : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.velocity = Random.insideUnitCircle.normalized * currentSpeed;
         currentSpeed = initialSpeed;
 
+        float directionAngle = (Random.Range(1, 5) + 0.5f) * Mathf.PI /2;
+        // rb.velocity = Random.insideUnitCircle.normalized * currentSpeed;
+        rb.velocity = new Vector2(Mathf.Cos(directionAngle)*spawnRadius, Mathf.Sin(directionAngle)*spawnRadius ).normalized * currentSpeed;
+
         // nastavenie zaciatocnej pozicie
-        float angle = Random.Range(1,5) * Mathf.PI * 2f / 4;
+        float angle = Random.Range(0.0f, 1.0f) * Mathf.PI * 2f;
         Debug.Log(angle);
         Vector2 newPos = new Vector2(Mathf.Cos(angle)*spawnRadius, Mathf.Sin(angle)*spawnRadius ) + (Vector2) pivot.position;
         transform.position = newPos;

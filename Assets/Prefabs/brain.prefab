@@ -121,10 +121,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialSpeed: 2
-  speedRampUp: 0.2
+  speedRampUp: 10
   currentSpeed: 1
-  spawnRadius: 1
-  repeatSaveLastPos: 0.05
+  spawnRadius: 1.2
   pivot: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
 --- !u!58 &4684392255724656802
 CircleCollider2D:
