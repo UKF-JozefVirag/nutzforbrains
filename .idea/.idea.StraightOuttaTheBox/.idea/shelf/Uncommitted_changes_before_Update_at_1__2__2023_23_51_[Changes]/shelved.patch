@@ -1,0 +1,433 @@
+Index: Assets/Scripts/BrainControl.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using System.Collections;\r\nusing System.Collections.Generic;\r\nusing UnityEngine;\r\n\r\npublic class BrainControl : MonoBehaviour\r\n{\r\n    // Start is called before the first frame update\r\n    void Start()\r\n    {\r\n        \r\n    }\r\n\r\n    // Update is called once per frame\r\n    void Update()\r\n    {\r\n        \r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/BrainControl.cs b/Assets/Scripts/BrainControl.cs
+--- a/Assets/Scripts/BrainControl.cs	(revision 73b56045e34f26169cce9fda9f162060070ee07b)
++++ b/Assets/Scripts/BrainControl.cs	(date 1675291643316)
+@@ -1,19 +1,75 @@
+ using System.Collections;
+ using System.Collections.Generic;
++using UnityEditor;
+ using UnityEngine;
+ 
++// Your brain remained inside the box, in it's comfort zone. You never let it achieve anything special. 
++
++[RequireComponent(typeof(Rigidbody2D))]
+ public class BrainControl : MonoBehaviour
+ {
++    private Rigidbody2D rb;
++    private Vector3 lastRememberedPosition = Vector2.zero;
++    // private float timeCounter = 0;
++    public float initialSpeed = 1;
++
++    public float speedRampUp = 1;
++
++    public float currentSpeed;
++
++    public float spawnRadius;
++    public float repeatSaveLastPos;
++
++    public Transform pivot;
+     // Start is called before the first frame update
+     void Start()
+     {
+-        
++        rb = GetComponent<Rigidbody2D>();
++        rb.velocity = Random.insideUnitCircle.normalized * currentSpeed;
++        currentSpeed = initialSpeed;
++
++        // nastavenie zaciatocnej pozicie
++        float angle = Random.Range(0.0f, 1.0f) * Mathf.PI * 2f;
++        Vector2 newPos = new Vector2(Mathf.Cos(angle)*spawnRadius, Mathf.Sin(angle)*spawnRadius ) + (Vector2) pivot.position;
++        transform.position = newPos;
++        // InvokeRepeating("TickCounter", 0, repeatSaveLastPos);
+     }
+ 
+     // Update is called once per frame
+     void Update()
+     {
+-        
++        currentSpeed += speedRampUp * Time.deltaTime;
++        // Debug.Log(rb.velocity.normalized);
++        rb.velocity = rb.velocity.normalized * currentSpeed;
++
++        // if (transform.position == lastRememberedPosition)
++        // {
++        //     // Debug.Log("rovnaka pozicia");
++        //     // rb.velocity = Random.insideUnitCircle.normalized * currentSpeed;
++        // }
++
++        // timeCounter += Time.deltaTime;
++        // // Debug.Log(timeCounter);
++        // if(Time.deltaTime % 1 == 0)
++        // {
++        //     Debug.Log("sekunda: " + timeCounter);
++        //     // timeCounter = 0;
++        //     lastRememberedPosition = transform.position;
++        // }
++
++        // Debug.Log("--------");
++        // Debug.Log(transform.position);
++        // Debug.Log(lastRememberedPosition);
+     }
++
++    // private void TickCounter()
++    // {
++    //     // Debug.Log(timeCounter);
++    //     if (transform.position == lastRememberedPosition)
++    //     {
++    //         rb.velocity = Random.insideUnitCircle.normalized * currentSpeed;
++    //     }
++    //     lastRememberedPosition = transform.position;
++    // }
+ 
+ }
+Index: Assets/Scripts/WallControl.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using UnityEngine;\r\nusing UnityEngine.EventSystems;\r\nusing UnityEngine.SocialPlatforms.Impl;\r\n\r\npublic class WallControl : MonoBehaviour\r\n{\r\n    [SerializeField]\r\n    private int currentHp;\r\n\r\n\r\n    // Start is called before the first frame update\r\n    void Start()\r\n    {\r\n            \r\n        switch (PlayerPrefs.GetInt(\"U_Repair\"))\r\n        {\r\n            case 0:\r\n                currentHp = 10;\r\n                break;\r\n            case 1:\r\n                currentHp = 20;\r\n                break;\r\n            case 2:\r\n                currentHp = 30;\r\n                break;\r\n            default: \r\n                currentHp = 10;\r\n                break;\r\n        }\r\n    }\r\n\r\n    // Update is called once per frame\r\n    void Update()\r\n    {\r\n        if (Input.GetMouseButtonDown(0))\r\n        {\r\n            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);\r\n            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);\r\n\r\n            if (hit.collider != null && hit.collider.transform == transform)\r\n            {\r\n                resolveWallEffect();\r\n            }\r\n        }\r\n\r\n\r\n\r\n    }\r\n\r\n    private void OnCollisionEnter2D(Collision2D collision)\r\n    {\r\n        if (collision.gameObject.tag == \"Brain\")\r\n        {\r\n            collision.gameObject.GetComponent<Rigidbody2D>().AddForce(-collision.contacts[0].normal +\r\n         new Vector2(Random.Range(-1, 1), Random.Range(-1, 1)));\r\n        }\r\n        \r\n    }\r\n\r\n    private void resolveWallEffect()\r\n    {\r\n        \r\n        if (PlayerPrefs.GetInt(\"repair\") == 1)\r\n        {\r\n            Debug.Log(\"repair\");\r\n            //TODO: ak je uroven repairu X tak sa hp zvysi o X a nemoze presiahnuť uroven HP daneho lvlu\r\n\r\n        }\r\n        else if (PlayerPrefs.GetInt(\"upgrade\") == 1)\r\n        {\r\n            Debug.Log(\"upgrade\");\r\n            //TODO: ak je uroven repairu X tak sa hp zvysi o X a nemoze presiahnuť uroven HP daneho lvlu\r\n\r\n        }\r\n        \r\n    }\r\n\r\n\r\n    public void sayHello()\r\n    {\r\n        Debug.Log(gameObject.name);\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/WallControl.cs b/Assets/Scripts/WallControl.cs
+--- a/Assets/Scripts/WallControl.cs	(revision 73b56045e34f26169cce9fda9f162060070ee07b)
++++ b/Assets/Scripts/WallControl.cs	(date 1675291643320)
+@@ -42,19 +42,10 @@
+                 resolveWallEffect();
+             }
+         }
+-
+-
+-
+     }
+ 
+     private void OnCollisionEnter2D(Collision2D collision)
+     {
+-        if (collision.gameObject.tag == "Brain")
+-        {
+-            collision.gameObject.GetComponent<Rigidbody2D>().AddForce(-collision.contacts[0].normal +
+-         new Vector2(Random.Range(-1, 1), Random.Range(-1, 1)));
+-        }
+-        
+     }
+ 
+     private void resolveWallEffect()
+Index: ProjectSettings/TagManager.asset
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>%YAML 1.1\r\n%TAG !u! tag:unity3d.com,2011:\r\n--- !u!78 &1\r\nTagManager:\r\n  serializedVersion: 2\r\n  tags: []\r\n  layers:\r\n  - Default\r\n  - TransparentFX\r\n  - Ignore Raycast\r\n  - \r\n  - Water\r\n  - UI\r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  - \r\n  m_SortingLayers:\r\n  - name: Default\r\n    uniqueID: 0\r\n    locked: 0\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ProjectSettings/TagManager.asset b/ProjectSettings/TagManager.asset
+--- a/ProjectSettings/TagManager.asset	(revision 73b56045e34f26169cce9fda9f162060070ee07b)
++++ b/ProjectSettings/TagManager.asset	(date 1675287623428)
+@@ -3,7 +3,8 @@
+ --- !u!78 &1
+ TagManager:
+   serializedVersion: 2
+-  tags: []
++  tags:
++  - Brain
+   layers:
+   - Default
+   - TransparentFX
+Index: Assets/Prefabs/brain.prefab
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>%YAML 1.1\r\n%TAG !u! tag:unity3d.com,2011:\r\n--- !u!1 &7318350497925242810\r\nGameObject:\r\n  m_ObjectHideFlags: 0\r\n  m_CorrespondingSourceObject: {fileID: 0}\r\n  m_PrefabInstance: {fileID: 0}\r\n  m_PrefabAsset: {fileID: 0}\r\n  serializedVersion: 6\r\n  m_Component:\r\n  - component: {fileID: 7318350497925242808}\r\n  - component: {fileID: 7318350497925242811}\r\n  - component: {fileID: 4805234330903466511}\r\n  m_Layer: 0\r\n  m_Name: brain\r\n  m_TagString: Untagged\r\n  m_Icon: {fileID: 0}\r\n  m_NavMeshLayer: 0\r\n  m_StaticEditorFlags: 0\r\n  m_IsActive: 1\r\n--- !u!4 &7318350497925242808\r\nTransform:\r\n  m_ObjectHideFlags: 0\r\n  m_CorrespondingSourceObject: {fileID: 0}\r\n  m_PrefabInstance: {fileID: 0}\r\n  m_PrefabAsset: {fileID: 0}\r\n  m_GameObject: {fileID: 7318350497925242810}\r\n  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}\r\n  m_LocalPosition: {x: -3, y: -1.25, z: 0}\r\n  m_LocalScale: {x: 1, y: 1, z: 1}\r\n  m_ConstrainProportionsScale: 0\r\n  m_Children: []\r\n  m_Father: {fileID: 0}\r\n  m_RootOrder: 0\r\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\r\n--- !u!212 &7318350497925242811\r\nSpriteRenderer:\r\n  m_ObjectHideFlags: 0\r\n  m_CorrespondingSourceObject: {fileID: 0}\r\n  m_PrefabInstance: {fileID: 0}\r\n  m_PrefabAsset: {fileID: 0}\r\n  m_GameObject: {fileID: 7318350497925242810}\r\n  m_Enabled: 1\r\n  m_CastShadows: 0\r\n  m_ReceiveShadows: 0\r\n  m_DynamicOccludee: 1\r\n  m_StaticShadowCaster: 0\r\n  m_MotionVectors: 1\r\n  m_LightProbeUsage: 1\r\n  m_ReflectionProbeUsage: 1\r\n  m_RayTracingMode: 0\r\n  m_RayTraceProcedural: 0\r\n  m_RenderingLayerMask: 1\r\n  m_RendererPriority: 0\r\n  m_Materials:\r\n  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}\r\n  m_StaticBatchInfo:\r\n    firstSubMesh: 0\r\n    subMeshCount: 0\r\n  m_StaticBatchRoot: {fileID: 0}\r\n  m_ProbeAnchor: {fileID: 0}\r\n  m_LightProbeVolumeOverride: {fileID: 0}\r\n  m_ScaleInLightmap: 1\r\n  m_ReceiveGI: 1\r\n  m_PreserveUVs: 0\r\n  m_IgnoreNormalsForChartDetection: 0\r\n  m_ImportantGI: 0\r\n  m_StitchLightmapSeams: 1\r\n  m_SelectedEditorRenderState: 0\r\n  m_MinimumChartSize: 4\r\n  m_AutoUVMaxDistance: 0.5\r\n  m_AutoUVMaxAngle: 89\r\n  m_LightmapParameters: {fileID: 0}\r\n  m_SortingLayerID: 0\r\n  m_SortingLayer: 0\r\n  m_SortingOrder: 0\r\n  m_Sprite: {fileID: 21300000, guid: 0a68fa1f43a5a8f41a85cd5d2cc45f39, type: 3}\r\n  m_Color: {r: 1, g: 1, b: 1, a: 1}\r\n  m_FlipX: 0\r\n  m_FlipY: 0\r\n  m_DrawMode: 0\r\n  m_Size: {x: 30.000002, y: 30.000002}\r\n  m_AdaptiveModeThreshold: 0.5\r\n  m_SpriteTileMode: 0\r\n  m_WasSpriteAssigned: 1\r\n  m_MaskInteraction: 0\r\n  m_SpriteSortPoint: 0\r\n--- !u!114 &4805234330903466511\r\nMonoBehaviour:\r\n  m_ObjectHideFlags: 0\r\n  m_CorrespondingSourceObject: {fileID: 0}\r\n  m_PrefabInstance: {fileID: 0}\r\n  m_PrefabAsset: {fileID: 0}\r\n  m_GameObject: {fileID: 7318350497925242810}\r\n  m_Enabled: 1\r\n  m_EditorHideFlags: 0\r\n  m_Script: {fileID: 11500000, guid: bd8b3a13584c8ce428bfd1d03f8056fa, type: 3}\r\n  m_Name: \r\n  m_EditorClassIdentifier: \r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Prefabs/brain.prefab b/Assets/Prefabs/brain.prefab
+--- a/Assets/Prefabs/brain.prefab	(revision 73b56045e34f26169cce9fda9f162060070ee07b)
++++ b/Assets/Prefabs/brain.prefab	(date 1675290488144)
+@@ -10,10 +10,12 @@
+   m_Component:
+   - component: {fileID: 7318350497925242808}
+   - component: {fileID: 7318350497925242811}
+-  - component: {fileID: 4805234330903466511}
++  - component: {fileID: 633050975}
++  - component: {fileID: 633050974}
++  - component: {fileID: 4684392255724656802}
+   m_Layer: 0
+   m_Name: brain
+-  m_TagString: Untagged
++  m_TagString: Brain
+   m_Icon: {fileID: 0}
+   m_NavMeshLayer: 0
+   m_StaticEditorFlags: 0
+@@ -85,7 +87,28 @@
+   m_WasSpriteAssigned: 1
+   m_MaskInteraction: 0
+   m_SpriteSortPoint: 0
+---- !u!114 &4805234330903466511
++--- !u!50 &633050975
++Rigidbody2D:
++  serializedVersion: 4
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 7318350497925242810}
++  m_BodyType: 0
++  m_Simulated: 1
++  m_UseFullKinematicContacts: 0
++  m_UseAutoMass: 0
++  m_Mass: 1
++  m_LinearDrag: 0
++  m_AngularDrag: 0
++  m_GravityScale: 0
++  m_Material: {fileID: 0}
++  m_Interpolate: 0
++  m_SleepingMode: 1
++  m_CollisionDetection: 1
++  m_Constraints: 4
++--- !u!114 &633050974
+ MonoBehaviour:
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+@@ -94,6 +117,28 @@
+   m_GameObject: {fileID: 7318350497925242810}
+   m_Enabled: 1
+   m_EditorHideFlags: 0
+-  m_Script: {fileID: 11500000, guid: bd8b3a13584c8ce428bfd1d03f8056fa, type: 3}
++  m_Script: {fileID: 11500000, guid: 52ccaa6aed4cdd3458b3ea1fc4f77a1e, type: 3}
+   m_Name: 
+   m_EditorClassIdentifier: 
++  initialSpeed: 2
++  speedRampUp: 0.2
++  currentSpeed: 1
++  spawnRadius: 1
++  repeatSaveLastPos: 0.05
++  pivot: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++--- !u!58 &4684392255724656802
++CircleCollider2D:
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_GameObject: {fileID: 7318350497925242810}
++  m_Enabled: 1
++  m_Density: 1
++  m_Material: {fileID: 0}
++  m_IsTrigger: 0
++  m_UsedByEffector: 0
++  m_UsedByComposite: 0
++  m_Offset: {x: 0, y: 0}
++  serializedVersion: 2
++  m_Radius: 0.6
+Index: Assets/Scenes/SampleScene.unity
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>%YAML 1.1\r\n%TAG !u! tag:unity3d.com,2011:\r\n--- !u!29 &1\r\nOcclusionCullingSettings:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_OcclusionBakeSettings:\r\n    smallestOccluder: 5\r\n    smallestHole: 0.25\r\n    backfaceThreshold: 100\r\n  m_SceneGUID: 00000000000000000000000000000000\r\n  m_OcclusionCullingData: {fileID: 0}\r\n--- !u!104 &2\r\nRenderSettings:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 9\r\n  m_Fog: 0\r\n  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}\r\n  m_FogMode: 3\r\n  m_FogDensity: 0.01\r\n  m_LinearFogStart: 0\r\n  m_LinearFogEnd: 300\r\n  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}\r\n  m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}\r\n  m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}\r\n  m_AmbientIntensity: 1\r\n  m_AmbientMode: 3\r\n  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}\r\n  m_SkyboxMaterial: {fileID: 0}\r\n  m_HaloStrength: 0.5\r\n  m_FlareStrength: 1\r\n  m_FlareFadeSpeed: 3\r\n  m_HaloTexture: {fileID: 0}\r\n  m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}\r\n  m_DefaultReflectionMode: 0\r\n  m_DefaultReflectionResolution: 128\r\n  m_ReflectionBounces: 1\r\n  m_ReflectionIntensity: 1\r\n  m_CustomReflection: {fileID: 0}\r\n  m_Sun: {fileID: 0}\r\n  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}\r\n  m_UseRadianceAmbientProbe: 0\r\n--- !u!157 &3\r\nLightmapSettings:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 12\r\n  m_GIWorkflowMode: 1\r\n  m_GISettings:\r\n    serializedVersion: 2\r\n    m_BounceScale: 1\r\n    m_IndirectOutputScale: 1\r\n    m_AlbedoBoost: 1\r\n    m_EnvironmentLightingMode: 0\r\n    m_EnableBakedLightmaps: 0\r\n    m_EnableRealtimeLightmaps: 0\r\n  m_LightmapEditorSettings:\r\n    serializedVersion: 12\r\n    m_Resolution: 2\r\n    m_BakeResolution: 40\r\n    m_AtlasSize: 1024\r\n    m_AO: 0\r\n    m_AOMaxDistance: 1\r\n    m_CompAOExponent: 1\r\n    m_CompAOExponentDirect: 0\r\n    m_ExtractAmbientOcclusion: 0\r\n    m_Padding: 2\r\n    m_LightmapParameters: {fileID: 0}\r\n    m_LightmapsBakeMode: 1\r\n    m_TextureCompression: 1\r\n    m_FinalGather: 0\r\n    m_FinalGatherFiltering: 1\r\n    m_FinalGatherRayCount: 256\r\n    m_ReflectionCompression: 2\r\n    m_MixedBakeMode: 2\r\n    m_BakeBackend: 0\r\n    m_PVRSampling: 1\r\n    m_PVRDirectSampleCount: 32\r\n    m_PVRSampleCount: 500\r\n    m_PVRBounces: 2\r\n    m_PVREnvironmentSampleCount: 500\r\n    m_PVREnvironmentReferencePointCount: 2048\r\n    m_PVRFilteringMode: 2\r\n    m_PVRDenoiserTypeDirect: 0\r\n    m_PVRDenoiserTypeIndirect: 0\r\n    m_PVRDenoiserTypeAO: 0\r\n    m_PVRFilterTypeDirect: 0\r\n    m_PVRFilterTypeIndirect: 0\r\n    m_PVRFilterTypeAO: 0\r\n    m_PVREnvironmentMIS: 0\r\n    m_PVRCulling: 1\r\n    m_PVRFilteringGaussRadiusDirect: 1\r\n    m_PVRFilteringGaussRadiusIndirect: 5\r\n    m_PVRFilteringGaussRadiusAO: 2\r\n    m_PVRFilteringAtrousPositionSigmaDirect: 0.5\r\n    m_PVRFilteringAtrousPositionSigmaIndirect: 2\r\n    m_PVRFilteringAtrousPositionSigmaAO: 1\r\n    m_ExportTrainingData: 0\r\n    m_TrainingDataDestination: TrainingData\r\n    m_LightProbeSampleCountMultiplier: 4\r\n  m_LightingDataAsset: {fileID: 0}\r\n  m_LightingSettings: {fileID: 0}\r\n--- !u!196 &4\r\nNavMeshSettings:\r\n  serializedVersion: 2\r\n  m_ObjectHideFlags: 0\r\n  m_BuildSettings:\r\n    serializedVersion: 2\r\n    agentTypeID: 0\r\n    agentRadius: 0.5\r\n    agentHeight: 2\r\n    agentSlope: 45\r\n    agentClimb: 0.4\r\n    ledgeDropHeight: 0\r\n    maxJumpAcrossDistance: 0\r\n    minRegionArea: 2\r\n    manualCellSize: 0\r\n    cellSize: 0.16666667\r\n    manualTileSize: 0\r\n    tileSize: 256\r\n    accuratePlacement: 0\r\n    maxJobWorkers: 0\r\n    preserveTilesOutsideBounds: 0\r\n    debug:\r\n      m_Flags: 0\r\n  m_NavMeshData: {fileID: 0}\r\n--- !u!1001 &143815705\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 0}\r\n    m_Modifications:\r\n    - target: {fileID: 7318350497925242808, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 1\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 7318350497925242808, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: -3\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 7318350497925242808, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: -1.25\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 7318350497925242808, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 7318350497925242808, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 1\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 7318350497925242808, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 7318350497925242808, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 7318350497925242808, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 7318350497925242808, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 7318350497925242808, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 7318350497925242808, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 7318350497925242810, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n      propertyPath: m_Name\r\n      value: brain\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: e258c8543d974794190a2f7eea7861d6, type: 3}\r\n--- !u!1001 &183787160\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 918027540}\r\n    m_Modifications:\r\n    - target: {fileID: 2225961597470157952, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_Name\r\n      value: Wall (11)\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 11\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: -6.5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: 2\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 0.7071068\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: 0.7071068\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 90\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n--- !u!4 &183787161 stripped\r\nTransform:\r\n  m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n  m_PrefabInstance: {fileID: 183787160}\r\n  m_PrefabAsset: {fileID: 0}\r\n--- !u!1001 &254598178\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 918027540}\r\n    m_Modifications:\r\n    - target: {fileID: 2225961597470157952, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_Name\r\n      value: Wall (1)\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 1\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: -3\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: 3.5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 1\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n--- !u!4 &254598179 stripped\r\nTransform:\r\n  m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n  m_PrefabInstance: {fileID: 254598178}\r\n  m_PrefabAsset: {fileID: 0}\r\n--- !u!1001 &257437669\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 918027540}\r\n    m_Modifications:\r\n    - target: {fileID: 2225961597470157952, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_Name\r\n      value: Wall (7)\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 7\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: -3\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: -3.5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 1\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n--- !u!4 &257437670 stripped\r\nTransform:\r\n  m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n  m_PrefabInstance: {fileID: 257437669}\r\n  m_PrefabAsset: {fileID: 0}\r\n--- !u!1001 &351794917\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 918027540}\r\n    m_Modifications:\r\n    - target: {fileID: 2225961597470157952, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_Name\r\n      value: Wall (10)\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 10\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: -6.5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 0.7071068\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: 0.7071068\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 90\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n--- !u!4 &351794918 stripped\r\nTransform:\r\n  m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n  m_PrefabInstance: {fileID: 351794917}\r\n  m_PrefabAsset: {fileID: 0}\r\n--- !u!1001 &411645471\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 918027540}\r\n    m_Modifications:\r\n    - target: {fileID: 2225961597470157952, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_Name\r\n      value: Wall (9)\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 9\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: -6.5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: -2\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 0.7071068\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: 0.7071068\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 90\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n--- !u!4 &411645472 stripped\r\nTransform:\r\n  m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n  m_PrefabInstance: {fileID: 411645471}\r\n  m_PrefabAsset: {fileID: 0}\r\n--- !u!1001 &424210959\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 918027540}\r\n    m_Modifications:\r\n    - target: {fileID: 2225961597470157952, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_Name\r\n      value: Wall (3)\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 3\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: 0.5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: 2\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 0.7071068\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: 0.7071068\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 90\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n--- !u!4 &424210960 stripped\r\nTransform:\r\n  m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n  m_PrefabInstance: {fileID: 424210959}\r\n  m_PrefabAsset: {fileID: 0}\r\n--- !u!1 &519420028\r\nGameObject:\r\n  m_ObjectHideFlags: 0\r\n  m_CorrespondingSourceObject: {fileID: 0}\r\n  m_PrefabInstance: {fileID: 0}\r\n  m_PrefabAsset: {fileID: 0}\r\n  serializedVersion: 6\r\n  m_Component:\r\n  - component: {fileID: 519420032}\r\n  - component: {fileID: 519420031}\r\n  - component: {fileID: 519420029}\r\n  m_Layer: 0\r\n  m_Name: Main Camera\r\n  m_TagString: MainCamera\r\n  m_Icon: {fileID: 0}\r\n  m_NavMeshLayer: 0\r\n  m_StaticEditorFlags: 0\r\n  m_IsActive: 1\r\n--- !u!81 &519420029\r\nAudioListener:\r\n  m_ObjectHideFlags: 0\r\n  m_CorrespondingSourceObject: {fileID: 0}\r\n  m_PrefabInstance: {fileID: 0}\r\n  m_PrefabAsset: {fileID: 0}\r\n  m_GameObject: {fileID: 519420028}\r\n  m_Enabled: 1\r\n--- !u!20 &519420031\r\nCamera:\r\n  m_ObjectHideFlags: 0\r\n  m_CorrespondingSourceObject: {fileID: 0}\r\n  m_PrefabInstance: {fileID: 0}\r\n  m_PrefabAsset: {fileID: 0}\r\n  m_GameObject: {fileID: 519420028}\r\n  m_Enabled: 1\r\n  serializedVersion: 2\r\n  m_ClearFlags: 2\r\n  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}\r\n  m_projectionMatrixMode: 1\r\n  m_GateFitMode: 2\r\n  m_FOVAxisMode: 0\r\n  m_SensorSize: {x: 36, y: 24}\r\n  m_LensShift: {x: 0, y: 0}\r\n  m_FocalLength: 50\r\n  m_NormalizedViewPortRect:\r\n    serializedVersion: 2\r\n    x: 0\r\n    y: 0\r\n    width: 1\r\n    height: 1\r\n  near clip plane: 0.3\r\n  far clip plane: 1000\r\n  field of view: 60\r\n  orthographic: 1\r\n  orthographic size: 5\r\n  m_Depth: -1\r\n  m_CullingMask:\r\n    serializedVersion: 2\r\n    m_Bits: 4294967295\r\n  m_RenderingPath: -1\r\n  m_TargetTexture: {fileID: 0}\r\n  m_TargetDisplay: 0\r\n  m_TargetEye: 0\r\n  m_HDR: 1\r\n  m_AllowMSAA: 0\r\n  m_AllowDynamicResolution: 0\r\n  m_ForceIntoRT: 0\r\n  m_OcclusionCulling: 0\r\n  m_StereoConvergence: 10\r\n  m_StereoSeparation: 0.022\r\n--- !u!4 &519420032\r\nTransform:\r\n  m_ObjectHideFlags: 0\r\n  m_CorrespondingSourceObject: {fileID: 0}\r\n  m_PrefabInstance: {fileID: 0}\r\n  m_PrefabAsset: {fileID: 0}\r\n  m_GameObject: {fileID: 519420028}\r\n  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}\r\n  m_LocalPosition: {x: 0, y: 0, z: -10}\r\n  m_LocalScale: {x: 1, y: 1, z: 1}\r\n  m_ConstrainProportionsScale: 0\r\n  m_Children: []\r\n  m_Father: {fileID: 0}\r\n  m_RootOrder: 0\r\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\r\n--- !u!1001 &541317915\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 918027540}\r\n    m_Modifications:\r\n    - target: {fileID: 2225961597470157952, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_Name\r\n      value: Wall (2)\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 2\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: -1\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: 3.5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 1\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n--- !u!4 &541317916 stripped\r\nTransform:\r\n  m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n  m_PrefabInstance: {fileID: 541317915}\r\n  m_PrefabAsset: {fileID: 0}\r\n--- !u!1001 &607363125\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 918027540}\r\n    m_Modifications:\r\n    - target: {fileID: 2225961597470157952, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_Name\r\n      value: Wall (6)\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 6\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: -1\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: -3.5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 1\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n--- !u!4 &607363126 stripped\r\nTransform:\r\n  m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n  m_PrefabInstance: {fileID: 607363125}\r\n  m_PrefabAsset: {fileID: 0}\r\n--- !u!1001 &661693709\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 918027540}\r\n    m_Modifications:\r\n    - target: {fileID: 2225961597470157952, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_Name\r\n      value: Wall (8)\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 8\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: -5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: -3.5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 1\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n--- !u!4 &661693710 stripped\r\nTransform:\r\n  m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n  m_PrefabInstance: {fileID: 661693709}\r\n  m_PrefabAsset: {fileID: 0}\r\n--- !u!1 &918027539\r\nGameObject:\r\n  m_ObjectHideFlags: 0\r\n  m_CorrespondingSourceObject: {fileID: 0}\r\n  m_PrefabInstance: {fileID: 0}\r\n  m_PrefabAsset: {fileID: 0}\r\n  serializedVersion: 6\r\n  m_Component:\r\n  - component: {fileID: 918027540}\r\n  m_Layer: 0\r\n  m_Name: Walls\r\n  m_TagString: Untagged\r\n  m_Icon: {fileID: 0}\r\n  m_NavMeshLayer: 0\r\n  m_StaticEditorFlags: 0\r\n  m_IsActive: 1\r\n--- !u!4 &918027540\r\nTransform:\r\n  m_ObjectHideFlags: 0\r\n  m_CorrespondingSourceObject: {fileID: 0}\r\n  m_PrefabInstance: {fileID: 0}\r\n  m_PrefabAsset: {fileID: 0}\r\n  m_GameObject: {fileID: 918027539}\r\n  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}\r\n  m_LocalPosition: {x: 0.019341223, y: 0.3647495, z: -367.48788}\r\n  m_LocalScale: {x: 1, y: 1, z: 1}\r\n  m_ConstrainProportionsScale: 0\r\n  m_Children:\r\n  - {fileID: 1452551247}\r\n  - {fileID: 254598179}\r\n  - {fileID: 541317916}\r\n  - {fileID: 424210960}\r\n  - {fileID: 1461831690}\r\n  - {fileID: 1968915299}\r\n  - {fileID: 607363126}\r\n  - {fileID: 257437670}\r\n  - {fileID: 661693710}\r\n  - {fileID: 411645472}\r\n  - {fileID: 351794918}\r\n  - {fileID: 183787161}\r\n  m_Father: {fileID: 0}\r\n  m_RootOrder: 2\r\n  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}\r\n--- !u!1001 &1452551246\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 918027540}\r\n    m_Modifications:\r\n    - target: {fileID: 2225961597470157952, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_Name\r\n      value: Wall\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: -5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: 3.5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 1\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: -0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n--- !u!4 &1452551247 stripped\r\nTransform:\r\n  m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n  m_PrefabInstance: {fileID: 1452551246}\r\n  m_PrefabAsset: {fileID: 0}\r\n--- !u!1001 &1461831689\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 918027540}\r\n    m_Modifications:\r\n    - target: {fileID: 2225961597470157952, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_Name\r\n      value: Wall (4)\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 4\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: 0.5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 0.7071068\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: 0.7071068\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 90\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n--- !u!4 &1461831690 stripped\r\nTransform:\r\n  m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n  m_PrefabInstance: {fileID: 1461831689}\r\n  m_PrefabAsset: {fileID: 0}\r\n--- !u!1001 &1968915298\r\nPrefabInstance:\r\n  m_ObjectHideFlags: 0\r\n  serializedVersion: 2\r\n  m_Modification:\r\n    m_TransformParent: {fileID: 918027540}\r\n    m_Modifications:\r\n    - target: {fileID: 2225961597470157952, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_Name\r\n      value: Wall (5)\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_RootOrder\r\n      value: 5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.x\r\n      value: 0.5\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.y\r\n      value: -2\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalPosition.z\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.w\r\n      value: 0.7071068\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalRotation.z\r\n      value: 0.7071068\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.x\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.y\r\n      value: 0\r\n      objectReference: {fileID: 0}\r\n    - target: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n      propertyPath: m_LocalEulerAnglesHint.z\r\n      value: 90\r\n      objectReference: {fileID: 0}\r\n    m_RemovedComponents: []\r\n  m_SourcePrefab: {fileID: 100100000, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n--- !u!4 &1968915299 stripped\r\nTransform:\r\n  m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}\r\n  m_PrefabInstance: {fileID: 1968915298}\r\n  m_PrefabAsset: {fileID: 0}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scenes/SampleScene.unity b/Assets/Scenes/SampleScene.unity
+--- a/Assets/Scenes/SampleScene.unity	(revision 73b56045e34f26169cce9fda9f162060070ee07b)
++++ b/Assets/Scenes/SampleScene.unity	(date 1675287827716)
+@@ -130,6 +130,18 @@
+   m_Modification:
+     m_TransformParent: {fileID: 0}
+     m_Modifications:
++    - target: {fileID: 633050974, guid: e258c8543d974794190a2f7eea7861d6, type: 3}
++      propertyPath: spawnRadius
++      value: 2
++      objectReference: {fileID: 0}
++    - target: {fileID: 633050974, guid: e258c8543d974794190a2f7eea7861d6, type: 3}
++      propertyPath: speedRampUp
++      value: 1
++      objectReference: {fileID: 0}
++    - target: {fileID: 4684392255724656802, guid: e258c8543d974794190a2f7eea7861d6, type: 3}
++      propertyPath: m_Radius
++      value: 0.6
++      objectReference: {fileID: 0}
+     - target: {fileID: 7318350497925242808, guid: e258c8543d974794190a2f7eea7861d6, type: 3}
+       propertyPath: m_RootOrder
+       value: 1
+@@ -846,7 +858,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 918027539}
+   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+-  m_LocalPosition: {x: 0.019341223, y: 0.3647495, z: -367.48788}
++  m_LocalPosition: {x: 0, y: 0, z: 0}
+   m_LocalScale: {x: 1, y: 1, z: 1}
+   m_ConstrainProportionsScale: 0
+   m_Children:
+@@ -1051,3 +1063,60 @@
+   m_CorrespondingSourceObject: {fileID: 2225961597470157966, guid: 38eadc97bc54be344823cfc35703f49e, type: 3}
+   m_PrefabInstance: {fileID: 1968915298}
+   m_PrefabAsset: {fileID: 0}
++--- !u!1001 &3399566266365757386
++PrefabInstance:
++  m_ObjectHideFlags: 0
++  serializedVersion: 2
++  m_Modification:
++    m_TransformParent: {fileID: 0}
++    m_Modifications:
++    - target: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++      propertyPath: m_RootOrder
++      value: 3
++      objectReference: {fileID: 0}
++    - target: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++      propertyPath: m_LocalPosition.x
++      value: -3
++      objectReference: {fileID: 0}
++    - target: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++      propertyPath: m_LocalPosition.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++      propertyPath: m_LocalPosition.z
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++      propertyPath: m_LocalRotation.w
++      value: 1
++      objectReference: {fileID: 0}
++    - target: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++      propertyPath: m_LocalRotation.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++      propertyPath: m_LocalRotation.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++      propertyPath: m_LocalRotation.z
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++      propertyPath: m_LocalEulerAnglesHint.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++      propertyPath: m_LocalEulerAnglesHint.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++      propertyPath: m_LocalEulerAnglesHint.z
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 6687864436752486649, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
++      propertyPath: m_Name
++      value: BrainSpawnPivot
++      objectReference: {fileID: 0}
++    m_RemovedComponents: []
++  m_SourcePrefab: {fileID: 100100000, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
+Index: Assets/Materials/NoFriction.physicsMaterial2D
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>%YAML 1.1\r\n%TAG !u! tag:unity3d.com,2011:\r\n--- !u!62 &6200000\r\nPhysicsMaterial2D:\r\n  m_ObjectHideFlags: 0\r\n  m_CorrespondingSourceObject: {fileID: 0}\r\n  m_PrefabInstance: {fileID: 0}\r\n  m_PrefabAsset: {fileID: 0}\r\n  m_Name: NoFriction\r\n  friction: 0\r\n  bounciness: 0\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Materials/NoFriction.physicsMaterial2D b/Assets/Materials/NoFriction.physicsMaterial2D
+--- a/Assets/Materials/NoFriction.physicsMaterial2D	(revision 73b56045e34f26169cce9fda9f162060070ee07b)
++++ b/Assets/Materials/NoFriction.physicsMaterial2D	(date 1675286024726)
+@@ -8,4 +8,4 @@
+   m_PrefabAsset: {fileID: 0}
+   m_Name: NoFriction
+   friction: 0
+-  bounciness: 0
++  bounciness: 1
+Index: .idea/.idea.StraightOuttaTheBox/.idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"620d814f-c09a-49ba-85e1-bb31b6dfa284\" name=\"Changes\" comment=\"unity project setup\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2L9CVU0OkoQLmsmcTs5O2lFbPoo\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\r\n    <property name=\"WebServerToolWindowFactoryState\" value=\"false\" />\r\n    <property name=\"rider.run.widget.enabled.cache\" value=\"false\" />\r\n    <property name=\"settings.editor.selected.configurable\" value=\"configurable.group.appearance\" />\r\n    <property name=\"vue.rearranger.settings.migration\" value=\"true\" />\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Attach to Unity Editor.Attach to Unity Editor\">\r\n    <configuration name=\"Attach to Unity Editor &amp; Play\" type=\"UNITY_DEBUG_RUN_CONFIGURATION\" factoryName=\"UNITY_ATTACH_AND_PLAY\" show_console_on_std_err=\"false\" show_console_on_std_out=\"false\" port=\"50000\" address=\"localhost\">\r\n      <option name=\"allowRunningInParallel\" value=\"false\" />\r\n      <option name=\"listenPortForConnections\" value=\"false\" />\r\n      <option name=\"pid\" />\r\n      <option name=\"projectPathOnTarget\" />\r\n      <option name=\"selectedOptions\">\r\n        <list />\r\n      </option>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Attach to Unity Editor\" type=\"UNITY_DEBUG_RUN_CONFIGURATION\" factoryName=\"Unity Debug\" show_console_on_std_err=\"false\" show_console_on_std_out=\"false\" port=\"50000\" address=\"localhost\">\r\n      <option name=\"allowRunningInParallel\" value=\"false\" />\r\n      <option name=\"listenPortForConnections\" value=\"false\" />\r\n      <option name=\"pid\" />\r\n      <option name=\"projectPathOnTarget\" />\r\n      <option name=\"selectedOptions\">\r\n        <list />\r\n      </option>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"620d814f-c09a-49ba-85e1-bb31b6dfa284\" name=\"Changes\" comment=\"\" />\r\n      <created>1675273939467</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1675273939467</updated>\r\n      <workItem from=\"1675273944705\" duration=\"78000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"unity project setup\">\r\n      <created>1675273975589</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675273975589</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"2\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"UnityCheckinConfiguration\" checkUnsavedScenes=\"true\" />\r\n  <component name=\"UnityProjectConfiguration\" hasMinimizedUI=\"null\" />\r\n  <component name=\"UnityUnitTestConfiguration\" currentTestLauncher=\"NUnit\" />\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <option name=\"CLEAR_INITIAL_COMMIT_MESSAGE\" value=\"true\" />\r\n    <MESSAGE value=\"unity project setup\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"unity project setup\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml b/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml
+--- a/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml	(revision 73b56045e34f26169cce9fda9f162060070ee07b)
++++ b/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml	(date 1675291643435)
+@@ -1,7 +1,15 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ChangeListManager">
+-    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="unity project setup" />
++    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="brain script, material rename, walls positions">
++      <change beforePath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Assets/Materials/NoFriction.physicsMaterial2D" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/NoFriction.physicsMaterial2D" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/brain.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/brain.prefab" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Assets/Scripts/WallControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/WallControl.cs" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -17,6 +25,7 @@
+     <option name="showLibraryContents" value="true" />
+   </component>
+   <component name="PropertiesComponent">
++    <property name="Discover.Launch.Via.Unity" value="true" />
+     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+     <property name="WebServerToolWindowFactoryState" value="false" />
+@@ -54,7 +63,7 @@
+       <option name="number" value="Default" />
+       <option name="presentableId" value="Default" />
+       <updated>1675273939467</updated>
+-      <workItem from="1675273944705" duration="78000" />
++      <workItem from="1675273944705" duration="9311000" />
+     </task>
+     <task id="LOCAL-00001" summary="unity project setup">
+       <created>1675273975589</created>
+@@ -63,7 +72,28 @@
+       <option name="project" value="LOCAL" />
+       <updated>1675273975589</updated>
+     </task>
+-    <option name="localTasksCounter" value="2" />
++    <task id="LOCAL-00002" summary="gitignore 2">
++      <created>1675274031731</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1675274031731</updated>
++    </task>
++    <task id="LOCAL-00003" summary="idea bs">
++      <created>1675274052303</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1675274052303</updated>
++    </task>
++    <task id="LOCAL-00004" summary="brain script, material rename, walls positions">
++      <created>1675274922171</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1675274922171</updated>
++    </task>
++    <option name="localTasksCounter" value="5" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -71,7 +101,7 @@
+   </component>
+   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+   <component name="UnityProjectConfiguration" hasMinimizedUI="null" />
+-  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
++  <component name="UnityUnitTestConfiguration" currentTestLauncher="EditMode" />
+   <component name="Vcs.Log.Tabs.Properties">
+     <option name="TAB_STATES">
+       <map>
+@@ -86,6 +116,9 @@
+   <component name="VcsManagerConfiguration">
+     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+     <MESSAGE value="unity project setup" />
+-    <option name="LAST_COMMIT_MESSAGE" value="unity project setup" />
++    <MESSAGE value="gitignore 2" />
++    <MESSAGE value="idea bs" />
++    <MESSAGE value="brain script, material rename, walls positions" />
++    <option name="LAST_COMMIT_MESSAGE" value="brain script, material rename, walls positions" />
+   </component>
+ </project>
+\ No newline at end of file

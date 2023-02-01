@@ -10,10 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 7318350497925242808}
   - component: {fileID: 7318350497925242811}
-  - component: {fileID: 4805234330903466511}
+  - component: {fileID: 633050975}
+  - component: {fileID: 633050974}
+  - component: {fileID: 4684392255724656802}
   m_Layer: 0
   m_Name: brain
-  m_TagString: Untagged
+  m_TagString: Brain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85,7 +87,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4805234330903466511
+--- !u!50 &633050975
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7318350497925242810}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 4
+--- !u!114 &633050974
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,6 +117,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 7318350497925242810}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd8b3a13584c8ce428bfd1d03f8056fa, type: 3}
+  m_Script: {fileID: 11500000, guid: 52ccaa6aed4cdd3458b3ea1fc4f77a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialSpeed: 2
+  speedRampUp: 0.2
+  currentSpeed: 1
+  spawnRadius: 1
+  repeatSaveLastPos: 0.05
+  pivot: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}
+--- !u!58 &4684392255724656802
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7318350497925242810}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.6

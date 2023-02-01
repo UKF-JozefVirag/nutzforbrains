@@ -32,19 +32,10 @@ public class WallControl : MonoBehaviour
                 resolveWallEffect();
             }
         }
-
-
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Brain")
-        {
-            collision.gameObject.GetComponent<Rigidbody2D>().AddForce(-collision.contacts[0].normal +
-         new Vector2(Random.Range(-1, 1), Random.Range(-1, 1)));
-        }
-        
     }
 
     public void resolveWallEffect()
