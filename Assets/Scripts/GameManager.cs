@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        PlayerPrefs.SetInt("U_Repair", 1);
+        PlayerPrefs.SetInt("U_Repair", 0);
     }
 
     // Start is called before the first frame update
@@ -21,4 +21,10 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+    public void clickRepair()
+    {
+        PlayerPrefs.SetInt("U_Repair", 1);
+    }
+
 }

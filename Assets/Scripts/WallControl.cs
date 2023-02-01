@@ -1,37 +1,31 @@
-﻿using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.SocialPlatforms.Impl;
+﻿using TMPro;
+using UnityEngine;
 
 public class WallControl : MonoBehaviour
 {
     [SerializeField]
     private int currentHp;
 
+    [SerializeField]
+    public int hpPerLevel;
+
+    public TMP_Text textHp;
 
     // Start is called before the first frame update
     void Start()
     {
-            
-        switch (PlayerPrefs.GetInt("U_Repair"))
-        {
-            case 0:
-                currentHp = 10;
-                break;
-            case 1:
-                currentHp = 20;
-                break;
-            case 2:
-                currentHp = 30;
-                break;
-            default: 
-                currentHp = 10;
-                break;
-        }
+        hpPerLevel = PlayerPrefs.GetInt("U_Walls");
+        currentHp = (10 + PlayerPrefs.GetInt("U_Repair") * hpPerLevel) - 5;
+        textHp = GetComponentInChildren<TMP_Text>();
+        if (textHp == null) Debug.Log("xd");
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        textHp.SetText("" + currentHp);
+
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -57,19 +51,24 @@ public class WallControl : MonoBehaviour
         
     }
 
-    private void resolveWallEffect()
+    public void resolveWallEffect()
     {
         
         if (PlayerPrefs.GetInt("repair") == 1)
         {
-            Debug.Log("repair");
-            //TODO: ak je uroven repairu X tak sa hp zvysi o X a nemoze presiahnuť uroven HP daneho lvlu
+            currentHp = PlayerPrefs.GetInt("U_Repair");
+            int maxWallHp = 10 + PlayerPrefs.GetInt("U_Repair") * hpPerLevel;
+
+            if (currentHp > maxWallHp)
+            {
+                currentHp = maxWallHp;
+            }
+            else currentHp++;
 
         }
         else if (PlayerPrefs.GetInt("upgrade") == 1)
         {
             Debug.Log("upgrade");
-            //TODO: ak je uroven repairu X tak sa hp zvysi o X a nemoze presiahnuť uroven HP daneho lvlu
 
         }
         
