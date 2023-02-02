@@ -1,0 +1,83 @@
+Index: Assets/Scripts/BrainControl.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using System.Collections;\r\nusing System.Collections.Generic;\r\nusing Unity.VisualScripting;\r\nusing UnityEditor;\r\nusing UnityEngine;\r\n\r\n// Your brain remained inside the box, in it's comfort zone. You never let it achieve anything special. \r\n\r\n[RequireComponent(typeof(Rigidbody2D))]\r\npublic class BrainControl : MonoBehaviour\r\n{\r\n    private Rigidbody2D rb;\r\n    \r\n    private float cooldownTimeCntr = 0;\r\n\r\n    public float currentSpeed;\r\n\r\n    private List<Vector2> possibleDirections = new List<Vector2>();\r\n    private bool dontResetToMiddle = false;\r\n\r\n    public float startingBrainCooldown = 1;\r\n    public float cooldownReductionRate = 0.2f;\r\n    private float currentBrainCooldown;\r\n\r\n\r\n    public Transform originPosition;\r\n    void Start()\r\n    {\r\n        rb = GetComponent<Rigidbody2D>();\r\n        transform.position = originPosition.position;\r\n        currentBrainCooldown = startingBrainCooldown;\r\n        cooldownTimeCntr = currentBrainCooldown;\r\n        \r\n        // naplnenie moznych smerov\r\n        possibleDirections.Add(Vector2.up);\r\n        possibleDirections.Add(Vector2.right);\r\n        possibleDirections.Add(Vector2.down);\r\n        possibleDirections.Add(Vector2.left);\r\n        \r\n        // nastavenie zaciatocneho smeru\r\n        decideDirection();\r\n    }\r\n\r\n    void Update()\r\n    {\r\n        if (currentBrainCooldown < 0.1f) currentBrainCooldown = 0.1f;\r\n\r\n        decideDirection();\r\n    }\r\n\r\n    private void decideDirection()\r\n    {\r\n        cooldownTimeCntr += Time.deltaTime;\r\n        \r\n        if (!dontResetToMiddle && Vector2.Distance(originPosition.position, transform.position) < 0.1)\r\n        {\r\n            transform.position = originPosition.position;\r\n            rb.velocity = Vector2.zero;\r\n            if (cooldownTimeCntr > currentBrainCooldown)\r\n            {\r\n                var newDirection = possibleDirections[Random.Range(0, 4)];\r\n                rb.velocity = newDirection * currentSpeed;\r\n                dontResetToMiddle = true;\r\n                cooldownTimeCntr = 0;\r\n                currentBrainCooldown -= cooldownReductionRate;\r\n            }\r\n        }\r\n\r\n        if (Vector2.Distance(originPosition.position, transform.position) > 0.1)\r\n        {\r\n            dontResetToMiddle = false;\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/BrainControl.cs b/Assets/Scripts/BrainControl.cs
+--- a/Assets/Scripts/BrainControl.cs	(revision ae25dde4e40e9a6709b79a4101deb53e3dd35501)
++++ b/Assets/Scripts/BrainControl.cs	(date 1675303812414)
+@@ -6,6 +6,8 @@
+ 
+ // Your brain remained inside the box, in it's comfort zone. You never let it achieve anything special. 
+ 
++// TODO: income, collidery zvonku boxu a koniec hry
++
+ [RequireComponent(typeof(Rigidbody2D))]
+ public class BrainControl : MonoBehaviour
+ {
+Index: .idea/.idea.StraightOuttaTheBox/.idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"620d814f-c09a-49ba-85e1-bb31b6dfa284\" name=\"Changes\" comment=\"45 angle\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Assets/Prefabs/brain.prefab\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Assets/Prefabs/brain.prefab\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Assets/Scripts/BrainControl.cs\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Assets/Scripts/BrainControl.cs\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"HighlightingSettingsPerFile\">\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Prefabs/brain.prefab\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2L9CVU0OkoQLmsmcTs5O2lFbPoo\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"Discover.Launch.Via.Unity\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\r\n    <property name=\"WebServerToolWindowFactoryState\" value=\"false\" />\r\n    <property name=\"rider.run.widget.enabled.cache\" value=\"false\" />\r\n    <property name=\"settings.editor.selected.configurable\" value=\"configurable.group.appearance\" />\r\n    <property name=\"vue.rearranger.settings.migration\" value=\"true\" />\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Attach to Unity Editor.Attach to Unity Editor\">\r\n    <configuration name=\"Attach to Unity Editor &amp; Play\" type=\"UNITY_DEBUG_RUN_CONFIGURATION\" factoryName=\"UNITY_ATTACH_AND_PLAY\" show_console_on_std_err=\"false\" show_console_on_std_out=\"false\" port=\"50000\" address=\"localhost\">\r\n      <option name=\"allowRunningInParallel\" value=\"false\" />\r\n      <option name=\"listenPortForConnections\" value=\"false\" />\r\n      <option name=\"pid\" />\r\n      <option name=\"projectPathOnTarget\" />\r\n      <option name=\"selectedOptions\">\r\n        <list />\r\n      </option>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Attach to Unity Editor\" type=\"UNITY_DEBUG_RUN_CONFIGURATION\" factoryName=\"Unity Debug\" show_console_on_std_err=\"false\" show_console_on_std_out=\"false\" port=\"50000\" address=\"localhost\">\r\n      <option name=\"allowRunningInParallel\" value=\"false\" />\r\n      <option name=\"listenPortForConnections\" value=\"false\" />\r\n      <option name=\"pid\" />\r\n      <option name=\"projectPathOnTarget\" />\r\n      <option name=\"selectedOptions\">\r\n        <list />\r\n      </option>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"620d814f-c09a-49ba-85e1-bb31b6dfa284\" name=\"Changes\" comment=\"\" />\r\n      <created>1675273939467</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1675273939467</updated>\r\n      <workItem from=\"1675273944705\" duration=\"19322000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"unity project setup\">\r\n      <created>1675273975589</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675273975589</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"gitignore 2\">\r\n      <created>1675274031731</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675274031731</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"idea bs\">\r\n      <created>1675274052303</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675274052303</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"brain script, material rename, walls positions\">\r\n      <created>1675274922171</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675274922171</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"bouncing brain\">\r\n      <created>1675292426135</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675292426135</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"45 angle\">\r\n      <created>1675293355582</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675293355582</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"7\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"UnityCheckinConfiguration\" checkUnsavedScenes=\"true\" />\r\n  <component name=\"UnityProjectConfiguration\" hasMinimizedUI=\"null\" />\r\n  <component name=\"UnityUnitTestConfiguration\" currentTestLauncher=\"EditMode\" />\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <option name=\"CLEAR_INITIAL_COMMIT_MESSAGE\" value=\"true\" />\r\n    <MESSAGE value=\"unity project setup\" />\r\n    <MESSAGE value=\"gitignore 2\" />\r\n    <MESSAGE value=\"idea bs\" />\r\n    <MESSAGE value=\"brain script, material rename, walls positions\" />\r\n    <MESSAGE value=\"bouncing brain\" />\r\n    <MESSAGE value=\"45 angle\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"45 angle\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml b/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml
+--- a/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml	(revision ae25dde4e40e9a6709b79a4101deb53e3dd35501)
++++ b/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml	(date 1675303812427)
+@@ -1,9 +1,7 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ChangeListManager">
+-    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="45 angle">
+-      <change beforePath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/brain.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/brain.prefab" afterDir="false" />
++    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="brain movement">
+       <change beforePath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -14,6 +12,7 @@
+   <component name="HighlightingSettingsPerFile">
+     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
++    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Prefabs/brain.prefab" root0="SKIP_HIGHLIGHTING" />
+     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Prefabs/brain.prefab" root0="SKIP_HIGHLIGHTING" />
+     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+@@ -69,7 +68,7 @@
+       <option name="number" value="Default" />
+       <option name="presentableId" value="Default" />
+       <updated>1675273939467</updated>
+-      <workItem from="1675273944705" duration="19322000" />
++      <workItem from="1675273944705" duration="20215000" />
+     </task>
+     <task id="LOCAL-00001" summary="unity project setup">
+       <created>1675273975589</created>
+@@ -113,7 +112,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1675293355582</updated>
+     </task>
+-    <option name="localTasksCounter" value="7" />
++    <task id="LOCAL-00007" summary="brain movement">
++      <created>1675302865448</created>
++      <option name="number" value="00007" />
++      <option name="presentableId" value="LOCAL-00007" />
++      <option name="project" value="LOCAL" />
++      <updated>1675302865448</updated>
++    </task>
++    <option name="localTasksCounter" value="8" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -141,6 +147,7 @@
+     <MESSAGE value="brain script, material rename, walls positions" />
+     <MESSAGE value="bouncing brain" />
+     <MESSAGE value="45 angle" />
+-    <option name="LAST_COMMIT_MESSAGE" value="45 angle" />
++    <MESSAGE value="brain movement" />
++    <option name="LAST_COMMIT_MESSAGE" value="brain movement" />
+   </component>
+ </project>
+\ No newline at end of file

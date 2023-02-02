@@ -984,10 +984,14 @@ MonoBehaviour:
   textHp3: {fileID: 2134769171}
   textHp4: {fileID: 1322710168}
   textResources: {fileID: 1035786096}
-  repairCost: {fileID: 1502510604}
-  repairUpgradeCost: {fileID: 507068754}
-  wallUpgradeCost: {fileID: 561448425}
-  incomeCost: {fileID: 2045861579}
+  repairCost: {fileID: 1111215113}
+  repairUpgradeCost: {fileID: 155284150}
+  wallUpgradeCost: {fileID: 848609150}
+  incomeCost: {fileID: 734463725}
+  resourceGainAmount: 5
+  resourceGainAmountIncrement: 5
+  resourceGainFrequency: 1
+  resourceGainInvoked: 0
 --- !u!1 &469635846
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023,7 +1027,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 224.99997, y: 0}
+  m_AnchoredPosition: {x: 224.99994, y: 0}
   m_SizeDelta: {x: -450, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &469635848
@@ -1133,7 +1137,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -2008,7 +2012,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -190.1, y: -25}
+  m_AnchoredPosition: {x: -190.10004, y: -25}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1035786096
