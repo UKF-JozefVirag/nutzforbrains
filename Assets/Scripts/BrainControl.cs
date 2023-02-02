@@ -6,6 +6,8 @@ using UnityEngine;
 
 // Your brain remained inside the box, in it's comfort zone. You never let it achieve anything special. 
 
+// TODO: income, collidery zvonku boxu a koniec hry, upgrade walls, upgrade repair, nejaka nelinearna funkcia na znizovanie cooldownu
+
 [RequireComponent(typeof(Rigidbody2D))]
 public class BrainControl : MonoBehaviour
 {
@@ -21,8 +23,7 @@ public class BrainControl : MonoBehaviour
     public float startingBrainCooldown = 1;
     public float cooldownReductionRate = 0.2f;
     private float currentBrainCooldown;
-
-
+    
     public Transform originPosition;
     void Start()
     {
@@ -46,7 +47,6 @@ public class BrainControl : MonoBehaviour
         if (currentBrainCooldown < 0.1f) currentBrainCooldown = 0.1f;
 
         decideDirection();
-
 
         if (Input.GetMouseButtonDown(0))
         {

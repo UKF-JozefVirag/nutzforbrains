@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="45 angle">
+    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="brain movement">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/brain.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/brain.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Wall.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Wall.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +17,8 @@
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Prefabs/brain.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Prefabs/brain.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
@@ -69,7 +73,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1675273939467</updated>
-      <workItem from="1675273944705" duration="19322000" />
+      <workItem from="1675273944705" duration="23913000" />
     </task>
     <task id="LOCAL-00001" summary="unity project setup">
       <created>1675273975589</created>
@@ -113,7 +117,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675293355582</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="brain movement">
+      <created>1675302865448</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1675302865448</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -141,6 +152,7 @@
     <MESSAGE value="brain script, material rename, walls positions" />
     <MESSAGE value="bouncing brain" />
     <MESSAGE value="45 angle" />
-    <option name="LAST_COMMIT_MESSAGE" value="45 angle" />
+    <MESSAGE value="brain movement" />
+    <option name="LAST_COMMIT_MESSAGE" value="brain movement" />
   </component>
 </project>

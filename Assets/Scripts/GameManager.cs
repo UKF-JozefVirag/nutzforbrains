@@ -9,9 +9,13 @@ public class GameManager : MonoBehaviour
     public TMP_Text textHp1, textHp2, textHp3, textHp4, textResources,
         repairCost, repairUpgradeCost, wallUpgradeCost, incomeCost;
 
+    public int resourceGainAmount;
+    public float resourceGainFrequency;
+    private bool resourceGainInvoked = false;
+
     private void Awake()
     {
-        PlayerPrefs.SetInt("resources", 20);
+        PlayerPrefs.SetInt("resources", 200);
 
         PlayerPrefs.SetInt("Wall1", 50); //hp stien
         PlayerPrefs.SetInt("Wall2", 50);
@@ -48,9 +52,25 @@ public class GameManager : MonoBehaviour
         if (PlayerPrefs.GetInt("Wall4") == 0) textHp4.text = "";
         else textHp4.text = PlayerPrefs.GetInt("Wall4") + "";
 
+        if (!resourceGainInvoked && PlayerPrefs.GetInt("U_Income") == 1)
+        {
+            resourceGainInvoked = true;
+            InvokeRepeating("TickResourceGain", resourceGainFrequency, resourceGainFrequency);
+        }
+
         textResources.text = "Resources: " + PlayerPrefs.GetInt("resources");
     }
 
+    private void TickResourceGain()
+    {
+        PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") + 
+                                        resourceGainAmount * PlayerPrefs.GetInt("U_Income") );
+    }
+
+    public void clickRepair()
+    {
+        PlayerPrefs.SetInt("U_Repair", 1);
+    }
 
     public void upgradeRepair()
     {
@@ -74,7 +94,7 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("upgradeCost"))
         {
-            PlayerPrefs.SetInt("U_Upgrade", PlayerPrefs.GetInt("U_Upgrade") +1);
+            PlayerPrefs.SetInt("U_Income", PlayerPrefs.GetInt("U_Income") +1);
             PlayerPrefs.SetInt("upgradeCost", (PlayerPrefs.GetInt("upgradeCost")+10)*2);
         }
     }
