@@ -1,26 +1,24 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class WallControl : MonoBehaviour
 {
-    [SerializeField]
     private int currentHp;
 
-    [SerializeField]
     public int hpPerLevel;
-
 
     // Start is called before the first frame update
     void Start()
     {
         hpPerLevel = PlayerPrefs.GetInt("U_Walls");
-        currentHp = PlayerPrefs.GetInt("U_Repair");
+        currentHp = PlayerPrefs.GetInt(gameObject.name);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
         if (currentHp <= 0)
         {
             gameObject.SetActive(false);
@@ -44,18 +42,18 @@ public class WallControl : MonoBehaviour
         {
             currentHp = Mathf.Clamp(currentHp - collision.gameObject.GetComponent<BrainControl>().currentDamage, 0, int.MaxValue);
         }
+
         PlayerPrefs.SetInt(gameObject.name, currentHp);
     }
 
     public void resolveWallEffect()
     {
-
         //TODO: Osetrit repair, tlacidlo je zapnute stale
         PlayerPrefs.SetInt("repair", 1);
         if (PlayerPrefs.GetInt("repair") == 1)
         {
             int maxWallHp = 10 + PlayerPrefs.GetInt("U_Repair") * hpPerLevel;
-
+        
             if (currentHp >= maxWallHp)
             {
                 currentHp = maxWallHp;
@@ -75,4 +73,3 @@ public class WallControl : MonoBehaviour
         
     }
 }
-

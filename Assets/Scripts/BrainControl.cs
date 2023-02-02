@@ -85,19 +85,16 @@ public class BrainControl : MonoBehaviour
         if (phaseCntr != 0 && phaseCntr % goldRushEveryNthPhase == 0)
         {
             initGoldRush();
-            Debug.Log("GOLD RUSH");
         }
 
         if (phaseCntr == 2)
         {
             initBrainFog();
-            Debug.Log("Brain fog");
         }
         
         if (phaseCntr == 4)
         {
             initBrainWave();
-            Debug.Log("Brain wave");
             // animacia vlny + vystrel do vsetkych stran projektil s tagom brain a malym colliderom, co uberie HP
             // zastav brain ked je v strede
         }
@@ -105,7 +102,6 @@ public class BrainControl : MonoBehaviour
         if (phaseCntr == 5)
         {
             initBrainFreeze();
-            Debug.Log("Brain Freeze");
             // zmen tint na nieco modro biele, zablokuj repair a spust korutinu co na konci nastavi ze sa moze repairovat wall
         }
         
