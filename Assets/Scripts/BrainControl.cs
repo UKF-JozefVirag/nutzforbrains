@@ -5,6 +5,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 // Your brain remained inside the box, in it's comfort zone. You never let it achieve anything special. 
@@ -37,7 +38,7 @@ public class BrainControl : MonoBehaviour
     private int currentResourceIncome;
 
     public TMP_Text phaseTimer;
-
+    public GameObject btnpanel;
     [Header("Phases")]
     public float timePerPhase = 30;
     public int normalResourceIncome = 1;
@@ -82,10 +83,40 @@ public class BrainControl : MonoBehaviour
         decideDirection();
     }
 
-    void Update()
+    IEnumerator FadeImage(bool fadeAway)
+    {
+        // fade from opaque to transparent
+        if (fadeAway)
+        {
+            // loop over 1 second backwards
+            for (float i = 1; i >= 0; i -= Time.deltaTime)
+            {
+                // set color with i as alpha
+                btnpanel.GetComponent<RawImage>().color = new Color(1, 1, 1, i);
+                yield return null;
+            }
+        }
+        // fade from transparent to opaque
+        else
+        {
+            // loop over 1 second
+            for (float i = 0; i <= 1; i += Time.deltaTime)
+            {
+                // set color with i as alpha
+                btnpanel.GetComponent<RawImage>().color = new Color(1, 1, 1, i);
+                yield return null;
+            }
+        }
+    }
+
+        void Update()
     {
         if (phaseCntr == WIN_PHASE)
         {
+            btnpanel.SetActive(true);
+            StartCoroutine(FadeImage(true));
+            Time.timeScale = 0f;
+
             // win game
             // lerp time, return
         }
@@ -148,6 +179,7 @@ public class BrainControl : MonoBehaviour
 
     private void initGoldRush()
     {
+        gameObject.GetComponent<SpriteRenderer>().color = brainGold;
         currentSpeed = goldRushSpeed;
         fog.SetActive(false);
         currentResourceIncome = goldRushResourceIncome;
@@ -156,6 +188,7 @@ public class BrainControl : MonoBehaviour
     }
     private void initBrainFog()
     {
+        gameObject.GetComponent<SpriteRenderer>().color = brainNormal;
         AudioManager.instance.PlaySound("fog");
         fog.SetActive(true);
         currentSpeed = normalSpeed;
@@ -166,6 +199,7 @@ public class BrainControl : MonoBehaviour
     
     private void initBrainWave()
     {
+        gameObject.GetComponent<SpriteRenderer>().color = brainNormal;
         AudioManager.instance.PlaySound("wave");
         fog.SetActive(false);
         currentSpeed = normalSpeed;
@@ -177,6 +211,7 @@ public class BrainControl : MonoBehaviour
 
     private void initBrainFreeze()
     {
+        gameObject.GetComponent<SpriteRenderer>().color = brainFrozen;
         AudioManager.instance.PlaySound("ice-block-hit");
         fog.SetActive(false);
         currentSpeed = normalSpeed;

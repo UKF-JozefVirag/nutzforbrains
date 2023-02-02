@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class GameManager : MonoBehaviour
 
     public Animator imageAnim;
     public Animator deathTextAnim;
+
+    
 
     private void Awake()
     {
@@ -144,5 +147,10 @@ public class GameManager : MonoBehaviour
             imageAnim.gameObject.SetActive(true);
             deathTextAnim.gameObject.SetActive(true);
         }
+    }
+
+    public void GoToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
