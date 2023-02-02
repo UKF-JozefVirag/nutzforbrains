@@ -52,23 +52,18 @@ public class WallControl : MonoBehaviour
         if (PlayerPrefs.GetInt("repair") == 1)
         {
             int maxWallHp = 10 + PlayerPrefs.GetInt("U_Repair") * hpPerLevel;
-        
+            
+            currentHp += PlayerPrefs.GetInt("repairCost");
             if (currentHp >= maxWallHp)
-            {
                 currentHp = maxWallHp;
-            }
-            else
-            {
-                currentHp += PlayerPrefs.GetInt("repairCost");
-                PlayerPrefs.SetInt(gameObject.name, currentHp);
-                PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("repairCost"));
-            }
+            PlayerPrefs.SetInt(gameObject.name, currentHp);
+            PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("repairCost"));
+
             PlayerPrefs.SetInt("repair", 0);
         }
         else if (PlayerPrefs.GetInt("upgrade") == 1)
         {
             Debug.Log("upgrade");
         }
-        
     }
 }

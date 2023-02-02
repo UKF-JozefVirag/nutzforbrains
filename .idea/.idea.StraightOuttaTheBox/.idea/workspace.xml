@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="small design changes + phase timer">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
+    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="ani nevjem">
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/WallControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/WallControl.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -178,7 +176,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675337261499</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="ani nevjem">
+      <created>1675339867554</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1675339867554</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -211,6 +216,7 @@
     <MESSAGE value="effects setup" />
     <MESSAGE value="dunno bullshit, dufam ze som nic neprepisal" />
     <MESSAGE value="small design changes + phase timer" />
-    <option name="LAST_COMMIT_MESSAGE" value="small design changes + phase timer" />
+    <MESSAGE value="ani nevjem" />
+    <option name="LAST_COMMIT_MESSAGE" value="ani nevjem" />
   </component>
 </project>
