@@ -20,10 +20,10 @@ public class GameManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("resources", 200);
 
-        PlayerPrefs.SetInt("Wall1", 1); //hp stien
-        PlayerPrefs.SetInt("Wall2", 1);
-        PlayerPrefs.SetInt("Wall3", 1);
-        PlayerPrefs.SetInt("Wall4", 1);
+        PlayerPrefs.SetInt("Wall1", 10); //hp stien
+        PlayerPrefs.SetInt("Wall2", 10);
+        PlayerPrefs.SetInt("Wall3", 10);
+        PlayerPrefs.SetInt("Wall4", 10);
 
         PlayerPrefs.SetInt("Wall1_i", 10); //init hp stien
         PlayerPrefs.SetInt("Wall2_i", 10);
@@ -40,11 +40,8 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("idleCost", 100); // cena idlu
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // Debug.Log(PlayerPrefs.GetInt("incomeCost"));
-
         if (PlayerPrefs.GetInt("resources") < 0)
         {
             PlayerPrefs.SetInt("resources", 0);
@@ -87,7 +84,8 @@ public class GameManager : MonoBehaviour
 
     public void clickRepair()
     {
-        PlayerPrefs.SetInt("U_Repair", 1);
+        // PlayerPrefs.SetInt("U_Repair", 1);
+        PlayerPrefs.SetInt("repair", 1);
     }
 
     public void upgradeRepair()
@@ -144,8 +142,6 @@ public class GameManager : MonoBehaviour
         {
             imageAnim.gameObject.SetActive(true);
             deathTextAnim.gameObject.SetActive(true);
-            // imageAnim.SetBool("FadeToBlack", true);
-            // deathTextAnim.SetBool("FadeIn", true);
         }
     }
 }

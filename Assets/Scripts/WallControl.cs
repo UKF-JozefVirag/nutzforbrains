@@ -48,8 +48,7 @@ public class WallControl : MonoBehaviour
 
     public void resolveWallEffect()
     {
-        //TODO: Osetrit repair, tlacidlo je zapnute stale
-        PlayerPrefs.SetInt("repair", 1);
+        // PlayerPrefs.SetInt("repair", 1);
         if (PlayerPrefs.GetInt("repair") == 1)
         {
             int maxWallHp = 10 + PlayerPrefs.GetInt("U_Repair") * hpPerLevel;
