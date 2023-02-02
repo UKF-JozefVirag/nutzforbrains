@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="bouncing brain">
+    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="45 angle">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Prefabs/brain.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/brain.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" afterDir="false" />
@@ -69,7 +69,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1675273939467</updated>
-      <workItem from="1675273944705" duration="10884000" />
+      <workItem from="1675273944705" duration="19322000" />
     </task>
     <task id="LOCAL-00001" summary="unity project setup">
       <created>1675273975589</created>
@@ -106,7 +106,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675292426135</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="45 angle">
+      <created>1675293355582</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1675293355582</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,6 +140,7 @@
     <MESSAGE value="idea bs" />
     <MESSAGE value="brain script, material rename, walls positions" />
     <MESSAGE value="bouncing brain" />
-    <option name="LAST_COMMIT_MESSAGE" value="bouncing brain" />
+    <MESSAGE value="45 angle" />
+    <option name="LAST_COMMIT_MESSAGE" value="45 angle" />
   </component>
 </project>
