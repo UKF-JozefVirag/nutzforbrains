@@ -40,7 +40,10 @@ public class WallControl : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        currentHp--;
+        if (collision.gameObject.tag == "Brain")
+        {
+            currentHp = Mathf.Clamp(currentHp - collision.gameObject.GetComponent<BrainControl>().currentDamage, 0, int.MaxValue);
+        }
         PlayerPrefs.SetInt(gameObject.name, currentHp);
     }
 

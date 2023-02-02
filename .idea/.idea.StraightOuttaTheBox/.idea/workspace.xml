@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="">
+    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;Assets/Scenes/SampleScene.unity">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/WallControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/WallControl.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,6 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/GameManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Prefabs/brain.prefab" root0="SKIP_HIGHLIGHTING" />
@@ -130,7 +132,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675302865448</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;Assets/Scenes/SampleScene.unity">
+      <created>1675321042289</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1675321042289</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -159,6 +168,7 @@
     <MESSAGE value="bouncing brain" />
     <MESSAGE value="45 angle" />
     <MESSAGE value="brain movement" />
-    <option name="LAST_COMMIT_MESSAGE" value="brain movement" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;Assets/Scenes/SampleScene.unity" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;Assets/Scenes/SampleScene.unity" />
   </component>
 </project>

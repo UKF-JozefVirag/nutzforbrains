@@ -6,7 +6,8 @@ using UnityEngine;
 
 // Your brain remained inside the box, in it's comfort zone. You never let it achieve anything special. 
 
-// TODO: income, collidery zvonku boxu a koniec hry, upgrade walls, upgrade repair, nejaka nelinearna funkcia na znizovanie cooldownu
+// TODO: upgrade walls, upgrade repair, nejaka nelinearna funkcia na znizovanie cooldownu
+// TODO: timer na zmenu modu, modulo na check breathera, efekty postupne, zvuky a grafika
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class BrainControl : MonoBehaviour
@@ -23,14 +24,35 @@ public class BrainControl : MonoBehaviour
     public float startingBrainCooldown = 1;
     public float cooldownReductionRate = 0.2f;
     private float currentBrainCooldown;
+
+    private int currentResourceIncome;
+
+    [Header("Phases")]
+    public float timePerPhase = 30;
+    public int normalResourceIncome = 1;
+    public float normalSpeed = 10;
+    public int currentDamage = 1;
+    public int normalDamage = 2;
+    public int brainFogDamage = 1;
+    private float timeCntr = 0;
+    private int phaseCntr = 0;
+
+    [Header("Gold rush")]
+    public float timePerGoldRush = 15;
+    public int goldRushEveryNthPhase = 3;
+    public float goldRushSpeed = 5;
+    public int goldRushResourceIncome = 3;
+    public int goldRushDamage = 1;
     
     public Transform originPosition;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         transform.position = originPosition.position;
         currentBrainCooldown = startingBrainCooldown;
         cooldownTimeCntr = currentBrainCooldown;
+        currentResourceIncome = normalResourceIncome;
         
         // naplnenie moznych smerov
         possibleDirections.Add(Vector2.up);
@@ -44,10 +66,54 @@ public class BrainControl : MonoBehaviour
 
     void Update()
     {
+        if (phaseCntr == 6)
+        {
+            // win game
+            // lerp time, return
+        }
+        
         if (currentBrainCooldown < 0.1f) currentBrainCooldown = 0.1f;
+        timeCntr += Time.deltaTime;
 
+        if (timeCntr > timePerGoldRush || timeCntr > timePerPhase)
+        {
+            timeCntr = 0; // TODO: pridat vypis do UI
+            phaseCntr++;
+        }
+        
+
+        if (phaseCntr != 0 && phaseCntr % goldRushEveryNthPhase == 0)
+        {
+            initGoldRush();
+            Debug.Log("GOLD RUSH");
+        }
+
+        if (phaseCntr == 2)
+        {
+            initBrainFog();
+            Debug.Log("Brain fog");
+        }
+        
+        if (phaseCntr == 4)
+        {
+            initBrainWave();
+            Debug.Log("Brain wave");
+            // animacia vlny + vystrel do vsetkych stran projektil s tagom brain a malym colliderom, co uberie HP
+            // zastav brain ked je v strede
+        }
+        
+        if (phaseCntr == 5)
+        {
+            initBrainFreeze();
+            Debug.Log("Brain Freeze");
+            // zmen tint na nieco modro biele, zablokuj repair a spust korutinu co na konci nastavi ze sa moze repairovat wall
+        }
+        
+
+        // rozhodnutie pre novy smer
         decideDirection();
 
+        // kliknutie prida resources
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -55,10 +121,45 @@ public class BrainControl : MonoBehaviour
 
             if (hit.collider != null && hit.collider.transform == transform)
             {
-                PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") + PlayerPrefs.GetInt("U_Click"));
+                PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") + currentResourceIncome);
             }
         }
     }
+
+    private void initGoldRush()
+    {
+        currentSpeed = goldRushSpeed;
+        currentResourceIncome = goldRushResourceIncome;
+        currentDamage = goldRushDamage;
+        GetComponent<SpriteRenderer>().enabled = true;
+    }
+    private void initBrainFog()
+    {
+        currentSpeed = normalSpeed;
+        currentResourceIncome = normalResourceIncome;
+        currentDamage = brainFogDamage;
+        GetComponent<SpriteRenderer>().enabled = false;
+    }
+    
+    private void initBrainWave()
+    {
+        currentSpeed = normalSpeed;
+        currentResourceIncome = normalResourceIncome;
+        currentDamage = normalDamage;
+        GetComponent<SpriteRenderer>().enabled = true;
+
+    }
+    
+    private void initBrainFreeze()
+    {
+        currentSpeed = normalSpeed;
+        currentResourceIncome = normalResourceIncome;
+        currentDamage = normalDamage;
+        GetComponent<SpriteRenderer>().enabled = true;
+
+    }
+    
+    
 
     private void decideDirection()
     {
