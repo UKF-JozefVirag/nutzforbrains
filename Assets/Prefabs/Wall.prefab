@@ -54,7 +54,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 11f93f1d085c40348b9160f7d3a9d9b1, type: 2}
+  - {fileID: 2100000, guid: 7e2bf97ac27d93943b24bede82cf4995, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -75,7 +75,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -124,4 +125,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd8b3a13584c8ce428bfd1d03f8056fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  originalMat: {fileID: 2100000, guid: 7e2bf97ac27d93943b24bede82cf4995, type: 2}
+  frozenMat: {fileID: 2100000, guid: a861ce6321959864998238c61343c45c, type: 2}
   hpPerLevel: 10

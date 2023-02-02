@@ -8,6 +8,9 @@ using System.Collections.Generic;
 public class WallControl : MonoBehaviour
 {
     private int currentHp;
+    private bool preventRepair = false;
+    public Material originalMat;
+    public Material frozenMat;
 
     public int hpPerLevel;
 
@@ -53,7 +56,7 @@ public class WallControl : MonoBehaviour
     public void resolveWallEffect()
     {
         // PlayerPrefs.SetInt("repair", 1);
-        if (PlayerPrefs.GetInt("repair") == 1 && PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("repairCost"))
+        if (!preventRepair && PlayerPrefs.GetInt("repair") == 1 && PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("repairCost"))
         {
 
             int maxWallHp = 10 + PlayerPrefs.GetInt("U_Repair") * hpPerLevel;
@@ -71,5 +74,18 @@ public class WallControl : MonoBehaviour
         {
             Debug.Log("upgrade");
         }
+    }
+
+    public void PreventRepair(float invulnerabilityPeriod)
+    {
+        preventRepair = true;
+        GetComponent<SpriteRenderer>().material = frozenMat;
+        Invoke("ResetRepairBlock", invulnerabilityPeriod);
+    }
+
+    private void ResetRepairBlock()
+    {
+        preventRepair = false;
+        GetComponent<SpriteRenderer>().material = originalMat;
     }
 }
