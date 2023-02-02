@@ -40,6 +40,7 @@ public class WallControl : MonoBehaviour
     {
         if (collision.gameObject.tag == "Brain")
         {
+            PlayerPrefs.SetInt("splash", 1);
             currentHp = Mathf.Clamp(currentHp - collision.gameObject.GetComponent<BrainControl>().currentDamage, 0, int.MaxValue);
         }
 
@@ -49,14 +50,16 @@ public class WallControl : MonoBehaviour
     public void resolveWallEffect()
     {
         // PlayerPrefs.SetInt("repair", 1);
-        if (PlayerPrefs.GetInt("repair") == 1)
+        if (PlayerPrefs.GetInt("repair") == 1 && PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("repairCost"))
         {
+
             int maxWallHp = 10 + PlayerPrefs.GetInt("U_Repair") * hpPerLevel;
             
             currentHp += PlayerPrefs.GetInt("repairCost");
             if (currentHp >= maxWallHp)
                 currentHp = maxWallHp;
             PlayerPrefs.SetInt(gameObject.name, currentHp);
+            
             PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("repairCost"));
 
             PlayerPrefs.SetInt("repair", 0);
