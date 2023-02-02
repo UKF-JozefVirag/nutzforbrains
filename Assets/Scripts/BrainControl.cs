@@ -30,6 +30,10 @@ public class BrainControl : MonoBehaviour
     public float cooldownReductionRate = 0.2f;
     private float currentBrainCooldown;
 
+    public Color brainNormal = Color.white;
+    public Color brainGold = Color.yellow;
+    public Color brainFrozen = Color.cyan;
+
     private int currentResourceIncome;
 
     public TMP_Text phaseTimer;
