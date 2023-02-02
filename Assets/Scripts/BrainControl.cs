@@ -14,7 +14,7 @@ using UnityEngine;
 public class BrainControl : MonoBehaviour
 {
     private Rigidbody2D rb;
-    
+
     private float cooldownTimeCntr = 0;
 
     public float currentSpeed;
@@ -62,13 +62,15 @@ public class BrainControl : MonoBehaviour
         possibleDirections.Add(Vector2.right);
         possibleDirections.Add(Vector2.down);
         possibleDirections.Add(Vector2.left);
-        
+
         // nastavenie zaciatocneho smeru
         decideDirection();
     }
 
     void Update()
     {
+        if (PlayerPrefs.GetInt("Splash") == 1) 
+
         if (phaseCntr == 6)
         {
             // win game
@@ -140,6 +142,7 @@ public class BrainControl : MonoBehaviour
     }
     private void initBrainFog()
     {
+        AudioManager.instance.PlaySound("fog");
         currentSpeed = normalSpeed;
         currentResourceIncome = normalResourceIncome;
         currentDamage = brainFogDamage;
@@ -148,6 +151,7 @@ public class BrainControl : MonoBehaviour
     
     private void initBrainWave()
     {
+        AudioManager.instance.PlaySound("wave");
         currentSpeed = normalSpeed;
         currentResourceIncome = normalResourceIncome;
         currentDamage = normalDamage;
@@ -157,6 +161,7 @@ public class BrainControl : MonoBehaviour
     
     private void initBrainFreeze()
     {
+        AudioManager.instance.PlaySound("ice-block-hit");
         currentSpeed = normalSpeed;
         currentResourceIncome = normalResourceIncome;
         currentDamage = normalDamage;

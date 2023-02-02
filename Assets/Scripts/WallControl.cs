@@ -2,6 +2,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
+using System.Collections;
+using System.Collections.Generic;
 
 public class WallControl : MonoBehaviour
 {
@@ -40,6 +42,7 @@ public class WallControl : MonoBehaviour
     {
         if (collision.gameObject.tag == "Brain")
         {
+            AudioManager.instance.PlaySound("splat-effect");
             PlayerPrefs.SetInt("splash", 1);
             currentHp = Mathf.Clamp(currentHp - collision.gameObject.GetComponent<BrainControl>().currentDamage, 0, int.MaxValue);
         }
@@ -59,7 +62,7 @@ public class WallControl : MonoBehaviour
             if (currentHp >= maxWallHp)
                 currentHp = maxWallHp;
             PlayerPrefs.SetInt(gameObject.name, currentHp);
-            
+            AudioManager.instance.PlaySound("upgrade");
             PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("repairCost"));
 
             PlayerPrefs.SetInt("repair", 0);
