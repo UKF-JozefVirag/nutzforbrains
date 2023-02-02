@@ -20,7 +20,11 @@ public class WallControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        Debug.Log(PlayerPrefs.GetInt("repair"));
+        if (currentHp <= 0)
+        {
+            gameObject.SetActive(false);
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -36,35 +40,33 @@ public class WallControl : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        currentHp--;
+        PlayerPrefs.SetInt(gameObject.name, currentHp);
     }
 
     public void resolveWallEffect()
     {
-        
+        PlayerPrefs.SetInt("repair", 1);
         if (PlayerPrefs.GetInt("repair") == 1)
         {
-            currentHp = PlayerPrefs.GetInt("U_Repair");
             int maxWallHp = 10 + PlayerPrefs.GetInt("U_Repair") * hpPerLevel;
 
-            if (currentHp > maxWallHp)
+            if (currentHp >= maxWallHp)
             {
                 currentHp = maxWallHp;
             }
-            else currentHp++;
-
+            else
+            {
+                currentHp++;
+                PlayerPrefs.SetInt(gameObject.name, currentHp);
+            }
+            PlayerPrefs.SetInt("repair", 0);
         }
         else if (PlayerPrefs.GetInt("upgrade") == 1)
         {
             Debug.Log("upgrade");
-
         }
         
-    }
-
-
-    public void sayHello()
-    {
-        Debug.Log(gameObject.name);
     }
 }
 
