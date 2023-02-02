@@ -46,6 +46,18 @@ public class BrainControl : MonoBehaviour
         if (currentBrainCooldown < 0.1f) currentBrainCooldown = 0.1f;
 
         decideDirection();
+
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
+
+            if (hit.collider != null && hit.collider.transform == transform)
+            {
+                PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") + PlayerPrefs.GetInt("U_Click"));
+            }
+        }
     }
 
     private void decideDirection()

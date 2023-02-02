@@ -14,13 +14,12 @@ public class WallControl : MonoBehaviour
     void Start()
     {
         hpPerLevel = PlayerPrefs.GetInt("U_Walls");
-        currentHp = (10 + PlayerPrefs.GetInt("U_Repair") * hpPerLevel) - 5;
+        currentHp = (50 + PlayerPrefs.GetInt("U_Repair") * hpPerLevel);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(PlayerPrefs.GetInt("repair"));
         if (currentHp <= 0)
         {
             gameObject.SetActive(false);
@@ -46,6 +45,8 @@ public class WallControl : MonoBehaviour
 
     public void resolveWallEffect()
     {
+
+        //TODO: Osetrit repair, tlacidlo je zapnute stale
         PlayerPrefs.SetInt("repair", 1);
         if (PlayerPrefs.GetInt("repair") == 1)
         {
@@ -59,6 +60,7 @@ public class WallControl : MonoBehaviour
             {
                 currentHp++;
                 PlayerPrefs.SetInt(gameObject.name, currentHp);
+                PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("repairCost"));
             }
             PlayerPrefs.SetInt("repair", 0);
         }
