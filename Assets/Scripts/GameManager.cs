@@ -43,6 +43,13 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(PlayerPrefs.GetInt("incomeCost"));
+
+        if (PlayerPrefs.GetInt("resources") < 0)
+        {
+            PlayerPrefs.SetInt("resources", 0);
+        }
+
         if (PlayerPrefs.GetInt("Wall1") == 0) textHp1.text = "";
         else textHp1.text = PlayerPrefs.GetInt("Wall1") + "";
         
@@ -64,6 +71,13 @@ public class GameManager : MonoBehaviour
         textResources.text = "Resources: " + PlayerPrefs.GetInt("resources");
     }
 
+    private void SetTextOfCost()
+    {
+        repairUpgradeCost.text = PlayerPrefs.GetInt("repairCost")+"";
+        wallUpgradeCost.text = PlayerPrefs.GetInt("wallCost") +"";
+        incomeCost.text = PlayerPrefs.GetInt("idleCost")+"";
+    }
+
     private void TickResourceGain()
     {
         PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") + 
@@ -79,9 +93,10 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("repairCost"))
         {
-            PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources"));
+            PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("repairCost"));
             PlayerPrefs.SetInt("U_Repair", PlayerPrefs.GetInt("U_Repair") +1);
             PlayerPrefs.SetInt("repairCost", (PlayerPrefs.GetInt("repairCost")+10)*2);
+            SetTextOfCost();
         }
     }
     
@@ -89,16 +104,20 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("wallCost"))
         {
+            PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("wallCost"));
             PlayerPrefs.SetInt("U_Walls", PlayerPrefs.GetInt("U_Walls") +1);
             PlayerPrefs.SetInt("wallCost", (PlayerPrefs.GetInt("wallCost")+10)*2);
+            SetTextOfCost();
         }
     }
     public void upgradeIncome()
     {
-        if (PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("upgradeCost"))
+        if (PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("idleCost"))
         {
+            PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("idleCost"));
             PlayerPrefs.SetInt("U_Income", PlayerPrefs.GetInt("U_Income") +1);
-            PlayerPrefs.SetInt("upgradeCost", (PlayerPrefs.GetInt("upgradeCost")+10)*2);
+            PlayerPrefs.SetInt("idleCost", PlayerPrefs.GetInt("idleCost")*2);
+            SetTextOfCost();
         }
     }
 
@@ -106,7 +125,6 @@ public class GameManager : MonoBehaviour
     {
         if (col.gameObject.tag == "Brain")
         {
-            //fade screen, show message
             imageAnim.SetBool("FadeToBlack", true);
             deathTextAnim.SetBool("FadeIn", true);
         }

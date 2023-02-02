@@ -20,6 +20,7 @@ public class WallControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (currentHp <= 0)
         {
             gameObject.SetActive(false);
