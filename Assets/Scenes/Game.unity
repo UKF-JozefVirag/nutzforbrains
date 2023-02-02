@@ -1093,8 +1093,8 @@ MonoBehaviour:
   textHp3: {fileID: 2134769171}
   textHp4: {fileID: 1322710168}
   textResources: {fileID: 1035786096}
-  repairCostText: {fileID: 0}
-  repairUpgradeCostx: {fileID: 0}
+  repairCostText: {fileID: 1502510604}
+  repairUpgradeCostx: {fileID: 507068754}
   repairUpgradeCost: {fileID: 507068754}
   wallUpgradeCost: {fileID: 561448425}
   incomeCost: {fileID: 2045861579}
