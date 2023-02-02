@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="brain movement">
+    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Wall.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Wall.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -17,11 +15,19 @@
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Prefabs/brain.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scenes/SampleScene.unity" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/GameManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/GameManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/GameManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Prefabs/brain.prefab" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/GameManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
   </component>

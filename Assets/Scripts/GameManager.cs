@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
     public float resourceGainFrequency;
     private bool resourceGainInvoked = false;
 
+    public Animator imageAnim;
+    public Animator deathTextAnim;
+
     private void Awake()
     {
         PlayerPrefs.SetInt("resources", 200);
@@ -99,4 +102,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Brain")
+        {
+            //fade screen, show message
+            imageAnim.SetBool("FadeToBlack", true);
+            deathTextAnim.SetBool("FadeIn", true);
+        }
+    }
 }
