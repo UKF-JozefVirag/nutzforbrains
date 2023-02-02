@@ -14,7 +14,7 @@ public class WallControl : MonoBehaviour
     void Start()
     {
         hpPerLevel = PlayerPrefs.GetInt("U_Walls");
-        currentHp = (50 + PlayerPrefs.GetInt("U_Repair") * hpPerLevel);
+        currentHp = PlayerPrefs.GetInt("U_Repair");
     }
 
     // Update is called once per frame
@@ -62,7 +62,7 @@ public class WallControl : MonoBehaviour
             }
             else
             {
-                currentHp++;
+                currentHp += PlayerPrefs.GetInt("repairCost");
                 PlayerPrefs.SetInt(gameObject.name, currentHp);
                 PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("repairCost"));
             }

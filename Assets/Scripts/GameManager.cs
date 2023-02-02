@@ -6,8 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
-    public TMP_Text textHp1, textHp2, textHp3, textHp4, textResources,
-        repairCost, repairUpgradeCost, wallUpgradeCost, incomeCost;
+    public TMP_Text textHp1, textHp2, textHp3, textHp4, textResources, repairCostText, repairUpgradeCostx,repairUpgradeCost, wallUpgradeCost, incomeCost;
 
     public int resourceGainAmount;
     public float resourceGainFrequency;
@@ -20,16 +19,22 @@ public class GameManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("resources", 200);
 
-        PlayerPrefs.SetInt("Wall1", 50); //hp stien
-        PlayerPrefs.SetInt("Wall2", 50);
-        PlayerPrefs.SetInt("Wall3", 50);
-        PlayerPrefs.SetInt("Wall4", 50);
+        PlayerPrefs.SetInt("Wall1", 10); //hp stien
+        PlayerPrefs.SetInt("Wall2", 10);
+        PlayerPrefs.SetInt("Wall3", 10);
+        PlayerPrefs.SetInt("Wall4", 10);
+
+        PlayerPrefs.SetInt("Wall1_i", 10); //init hp stien
+        PlayerPrefs.SetInt("Wall2_i", 10);
+        PlayerPrefs.SetInt("Wall3_i", 10);
+        PlayerPrefs.SetInt("Wall4_i", 10);
 
         PlayerPrefs.SetInt("U_Repair", 0); // upgrade repairu
         PlayerPrefs.SetInt("U_Walls", 0); // upgrade walls
         PlayerPrefs.SetInt("U_Income", 0); // upgrade income
 
-        PlayerPrefs.SetInt("repairCost", 1); // cena repairu
+        PlayerPrefs.SetInt("repairCost", 1);
+        PlayerPrefs.SetInt("repairUpgradeCost", 20); // cena repairu
         PlayerPrefs.SetInt("wallCost", 50); // cena walls
         PlayerPrefs.SetInt("idleCost", 100); // cena idlu
     }
@@ -73,9 +78,10 @@ public class GameManager : MonoBehaviour
 
     private void SetTextOfCost()
     {
-        repairUpgradeCost.text = PlayerPrefs.GetInt("repairCost")+"";
-        wallUpgradeCost.text = PlayerPrefs.GetInt("wallCost") +"";
-        incomeCost.text = PlayerPrefs.GetInt("idleCost")+"";
+        repairCostText.text = PlayerPrefs.GetInt("repairCost") + "";
+        repairUpgradeCostx.text = PlayerPrefs.GetInt("repairUpgradeCost") + "";
+        wallUpgradeCost.text = PlayerPrefs.GetInt("wallCost") + "";
+        incomeCost.text = PlayerPrefs.GetInt("idleCost") + "";
     }
 
     private void TickResourceGain()
@@ -91,11 +97,12 @@ public class GameManager : MonoBehaviour
 
     public void upgradeRepair()
     {
-        if (PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("repairCost"))
+        if (PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("repairUpgradeCost"))
         {
-            PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("repairCost"));
-            PlayerPrefs.SetInt("U_Repair", PlayerPrefs.GetInt("U_Repair") +1);
-            PlayerPrefs.SetInt("repairCost", (PlayerPrefs.GetInt("repairCost")+10)*2);
+            PlayerPrefs.SetInt("repairCost", PlayerPrefs.GetInt("U_Repair") + 1);
+            PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("repairUpgradeCost"));
+            PlayerPrefs.SetInt("U_Repair", PlayerPrefs.GetInt("U_Repair") + 1);
+            PlayerPrefs.SetInt("repairUpgradeCost", (PlayerPrefs.GetInt("repairUpgradeCost") + 10) * 2);
             SetTextOfCost();
         }
     }
@@ -104,10 +111,25 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("wallCost"))
         {
+            PlayerPrefs.SetInt("Wall1", PlayerPrefs.GetInt("Wall1_i") * 3);
+            PlayerPrefs.SetInt("Wall2", PlayerPrefs.GetInt("Wall2_i") * 3);
+            PlayerPrefs.SetInt("Wall3", PlayerPrefs.GetInt("Wall3_i") * 3);
+            PlayerPrefs.SetInt("Wall4", PlayerPrefs.GetInt("Wall4_i") * 3);
+
+            PlayerPrefs.SetInt("Wall1_i", PlayerPrefs.GetInt("Wall1_i") * 3);
+            PlayerPrefs.SetInt("Wall2_i", PlayerPrefs.GetInt("Wall2_i") * 3);
+            PlayerPrefs.SetInt("Wall3_i", PlayerPrefs.GetInt("Wall3_i") * 3);
+            PlayerPrefs.SetInt("Wall4_i", PlayerPrefs.GetInt("Wall4_i") * 3);
+
             PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("wallCost"));
-            PlayerPrefs.SetInt("U_Walls", PlayerPrefs.GetInt("U_Walls") +1);
-            PlayerPrefs.SetInt("wallCost", (PlayerPrefs.GetInt("wallCost")+10)*2);
+            PlayerPrefs.SetInt("U_Walls", PlayerPrefs.GetInt("U_Walls") + 1);
+            PlayerPrefs.SetInt("wallCost", (PlayerPrefs.GetInt("wallCost") + 10) * 2);
             SetTextOfCost();
+
+            textHp1.text = PlayerPrefs.GetInt("Wall1") + "";
+            textHp2.text = PlayerPrefs.GetInt("Wall2") + "";
+            textHp3.text = PlayerPrefs.GetInt("Wall3") + "";
+            textHp4.text = PlayerPrefs.GetInt("Wall4") + "";
         }
     }
     public void upgradeIncome()
@@ -115,8 +137,8 @@ public class GameManager : MonoBehaviour
         if (PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("idleCost"))
         {
             PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources") - PlayerPrefs.GetInt("idleCost"));
-            PlayerPrefs.SetInt("U_Income", PlayerPrefs.GetInt("U_Income") +1);
-            PlayerPrefs.SetInt("idleCost", PlayerPrefs.GetInt("idleCost")*2);
+            PlayerPrefs.SetInt("U_Income", PlayerPrefs.GetInt("U_Income") + 1);
+            PlayerPrefs.SetInt("idleCost", PlayerPrefs.GetInt("idleCost") * 2);
             SetTextOfCost();
         }
     }
