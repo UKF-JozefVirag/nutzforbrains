@@ -139,4 +139,16 @@ MonoBehaviour:
   currentSpeed: 10
   startingBrainCooldown: 3
   cooldownReductionRate: 0.1
+  phaseTimer: {fileID: 8975203077888145722, guid: 533e8c70226a7f941a7666d0c7c7d21f, type: 3}
+  timePerPhase: 30
+  normalResourceIncome: 1
+  normalSpeed: 10
+  currentDamage: 1
+  normalDamage: 2
+  brainFogDamage: 1
+  timePerGoldRush: 15
+  goldRushEveryNthPhase: 3
+  goldRushSpeed: 5
+  goldRushResourceIncome: 3
+  goldRushDamage: 1
   originPosition: {fileID: 309564898876981044, guid: ecbeb9bcdea4bdc4680b380353f67c3f, type: 3}

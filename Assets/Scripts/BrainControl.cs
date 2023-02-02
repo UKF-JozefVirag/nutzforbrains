@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -26,6 +27,8 @@ public class BrainControl : MonoBehaviour
     private float currentBrainCooldown;
 
     private int currentResourceIncome;
+
+    public TMP_Text phaseTimer;
 
     [Header("Phases")]
     public float timePerPhase = 30;
@@ -82,9 +85,15 @@ public class BrainControl : MonoBehaviour
         }
         
 
-        if (phaseCntr != 0 && phaseCntr % goldRushEveryNthPhase == 0)
+        if (phaseCntr % goldRushEveryNthPhase == 0)
         {
-            initGoldRush();
+            if(phaseCntr != 0)
+                initGoldRush();
+            phaseTimer.SetText("" + (int) (timePerGoldRush - timeCntr));
+        }
+        else
+        {
+            phaseTimer.SetText("" + (int) (timePerPhase - timeCntr));
         }
 
         if (phaseCntr == 2)
