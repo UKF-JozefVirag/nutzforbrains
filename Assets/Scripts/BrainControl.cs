@@ -15,6 +15,8 @@ public class BrainControl : MonoBehaviour
 {
     private Rigidbody2D rb;
 
+    public GameObject fog;
+
     private float cooldownTimeCntr = 0;
 
     public float currentSpeed;
@@ -136,6 +138,7 @@ public class BrainControl : MonoBehaviour
     private void initGoldRush()
     {
         currentSpeed = goldRushSpeed;
+        fog.SetActive(false);
         currentResourceIncome = goldRushResourceIncome;
         currentDamage = goldRushDamage;
         GetComponent<SpriteRenderer>().enabled = true;
@@ -143,6 +146,7 @@ public class BrainControl : MonoBehaviour
     private void initBrainFog()
     {
         AudioManager.instance.PlaySound("fog");
+        fog.SetActive(true);
         currentSpeed = normalSpeed;
         currentResourceIncome = normalResourceIncome;
         currentDamage = brainFogDamage;
@@ -152,6 +156,7 @@ public class BrainControl : MonoBehaviour
     private void initBrainWave()
     {
         AudioManager.instance.PlaySound("wave");
+        fog.SetActive(false);
         currentSpeed = normalSpeed;
         currentResourceIncome = normalResourceIncome;
         currentDamage = normalDamage;
@@ -162,6 +167,7 @@ public class BrainControl : MonoBehaviour
     private void initBrainFreeze()
     {
         AudioManager.instance.PlaySound("ice-block-hit");
+        fog.SetActive(false);
         currentSpeed = normalSpeed;
         currentResourceIncome = normalResourceIncome;
         currentDamage = normalDamage;
