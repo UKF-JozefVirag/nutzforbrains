@@ -51,15 +51,12 @@ public class GameManager : MonoBehaviour
         textResources.text = "Resources: " + PlayerPrefs.GetInt("resources");
     }
 
-    public void clickRepair()
-    {
-        PlayerPrefs.SetInt("U_Repair", 1);
-    }
 
     public void upgradeRepair()
     {
         if (PlayerPrefs.GetInt("resources") >= PlayerPrefs.GetInt("repairCost"))
         {
+            PlayerPrefs.SetInt("resources", PlayerPrefs.GetInt("resources"));
             PlayerPrefs.SetInt("U_Repair", PlayerPrefs.GetInt("U_Repair") +1);
             PlayerPrefs.SetInt("repairCost", (PlayerPrefs.GetInt("repairCost")+10)*2);
         }
