@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 // Your brain remained inside the box, in it's comfort zone. You never let it achieve anything special. 
 
@@ -41,14 +43,21 @@ public class BrainControl : MonoBehaviour
     private int phaseCntr = 0;
 
     [Header("Gold rush")]
-    public float timePerGoldRush = 15;
+    public float timePerGoldRush = 2;
     public int goldRushEveryNthPhase = 3;
     public float goldRushSpeed = 5;
     public int goldRushResourceIncome = 3;
     public int goldRushDamage = 1;
+
+    [Header("Brain freeze")] public float frozenTime = 3;
     
     public Transform originPosition;
 
+    const int BRAIN_FOG_PHASE = 4;
+    const int BRAIN_WAVE_PHASE = 2;
+    const int BRAIN_FREEZE_PHASE = 1;
+    private const int WIN_PHASE = 5;
+    
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -69,7 +78,7 @@ public class BrainControl : MonoBehaviour
 
     void Update()
     {
-        if (phaseCntr == 6)
+        if (phaseCntr == WIN_PHASE)
         {
             // win game
             // lerp time, return
@@ -78,7 +87,7 @@ public class BrainControl : MonoBehaviour
         if (currentBrainCooldown < 0.1f) currentBrainCooldown = 0.1f;
         timeCntr += Time.deltaTime;
 
-        if (timeCntr > timePerGoldRush || timeCntr > timePerPhase)
+        if (timeCntr > timePerPhase || (phaseCntr % goldRushEveryNthPhase == 0 && timeCntr > timePerGoldRush))
         {
             timeCntr = 0; // TODO: pridat vypis do UI
             phaseCntr++;
@@ -96,19 +105,19 @@ public class BrainControl : MonoBehaviour
             phaseTimer.SetText("" + (int) (timePerPhase - timeCntr));
         }
 
-        if (phaseCntr == 2)
+        if (phaseCntr == BRAIN_FOG_PHASE)
         {
             initBrainFog();
         }
         
-        if (phaseCntr == 4)
+        if (phaseCntr == BRAIN_WAVE_PHASE)
         {
             initBrainWave();
             // animacia vlny + vystrel do vsetkych stran projektil s tagom brain a malym colliderom, co uberie HP
             // zastav brain ked je v strede
         }
         
-        if (phaseCntr == 5)
+        if (phaseCntr == BRAIN_FREEZE_PHASE)
         {
             initBrainFreeze();
             // zmen tint na nieco modro biele, zablokuj repair a spust korutinu co na konci nastavi ze sa moze repairovat wall
@@ -154,17 +163,29 @@ public class BrainControl : MonoBehaviour
         GetComponent<SpriteRenderer>().enabled = true;
 
     }
-    
+
     private void initBrainFreeze()
     {
         currentSpeed = normalSpeed;
         currentResourceIncome = normalResourceIncome;
         currentDamage = normalDamage;
         GetComponent<SpriteRenderer>().enabled = true;
-
     }
-    
-    
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (phaseCntr == BRAIN_FREEZE_PHASE)
+        {
+            FreezWall(col.gameObject);
+        }
+    }
+
+    private void FreezWall(GameObject wall)
+    {
+        // nastav stenu ktoru sme trafili na nerozbitnu, spusti timer, ktory ju nastavi spat na rozbitnu po frozenTime
+        float invulnerabilityPeriod = frozenTime;
+        wall.GetComponent<WallControl>().PreventRepair(invulnerabilityPeriod);
+    }
 
     private void decideDirection()
     {

@@ -1,0 +1,183 @@
+Index: Assets/Scripts/BrainControl.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using System.Collections;\r\nusing System.Collections.Generic;\r\nusing TMPro;\r\nusing Unity.VisualScripting;\r\nusing UnityEditor;\r\nusing UnityEngine;\r\n\r\n// Your brain remained inside the box, in it's comfort zone. You never let it achieve anything special. \r\n\r\n// TODO: upgrade walls, upgrade repair, nejaka nelinearna funkcia na znizovanie cooldownu\r\n// TODO: timer na zmenu modu, modulo na check breathera, efekty postupne, zvuky a grafika\r\n\r\n[RequireComponent(typeof(Rigidbody2D))]\r\npublic class BrainControl : MonoBehaviour\r\n{\r\n    private Rigidbody2D rb;\r\n    \r\n    private float cooldownTimeCntr = 0;\r\n\r\n    public float currentSpeed;\r\n\r\n    private List<Vector2> possibleDirections = new List<Vector2>();\r\n    private bool dontResetToMiddle = false;\r\n\r\n    public float startingBrainCooldown = 1;\r\n    public float cooldownReductionRate = 0.2f;\r\n    private float currentBrainCooldown;\r\n\r\n    private int currentResourceIncome;\r\n\r\n    public TMP_Text phaseTimer;\r\n\r\n    [Header(\"Phases\")]\r\n    public float timePerPhase = 30;\r\n    public int normalResourceIncome = 1;\r\n    public float normalSpeed = 10;\r\n    public int currentDamage = 1;\r\n    public int normalDamage = 2;\r\n    public int brainFogDamage = 1;\r\n    private float timeCntr = 0;\r\n    private int phaseCntr = 0;\r\n\r\n    [Header(\"Gold rush\")]\r\n    public float timePerGoldRush = 15;\r\n    public int goldRushEveryNthPhase = 3;\r\n    public float goldRushSpeed = 5;\r\n    public int goldRushResourceIncome = 3;\r\n    public int goldRushDamage = 1;\r\n    \r\n    public Transform originPosition;\r\n\r\n    void Start()\r\n    {\r\n        rb = GetComponent<Rigidbody2D>();\r\n        transform.position = originPosition.position;\r\n        currentBrainCooldown = startingBrainCooldown;\r\n        cooldownTimeCntr = currentBrainCooldown;\r\n        currentResourceIncome = normalResourceIncome;\r\n        \r\n        // naplnenie moznych smerov\r\n        possibleDirections.Add(Vector2.up);\r\n        possibleDirections.Add(Vector2.right);\r\n        possibleDirections.Add(Vector2.down);\r\n        possibleDirections.Add(Vector2.left);\r\n        \r\n        // nastavenie zaciatocneho smeru\r\n        decideDirection();\r\n    }\r\n\r\n    void Update()\r\n    {\r\n        if (phaseCntr == 6)\r\n        {\r\n            // win game\r\n            // lerp time, return\r\n        }\r\n        \r\n        if (currentBrainCooldown < 0.1f) currentBrainCooldown = 0.1f;\r\n        timeCntr += Time.deltaTime;\r\n\r\n        if (timeCntr > timePerGoldRush || timeCntr > timePerPhase)\r\n        {\r\n            timeCntr = 0; // TODO: pridat vypis do UI\r\n            phaseCntr++;\r\n        }\r\n        \r\n\r\n        if (phaseCntr % goldRushEveryNthPhase == 0)\r\n        {\r\n            if(phaseCntr != 0)\r\n                initGoldRush();\r\n            phaseTimer.SetText(\"\" + (int) (timePerGoldRush - timeCntr));\r\n        }\r\n        else\r\n        {\r\n            phaseTimer.SetText(\"\" + (int) (timePerPhase - timeCntr));\r\n        }\r\n\r\n        if (phaseCntr == 2)\r\n        {\r\n            initBrainFog();\r\n        }\r\n        \r\n        if (phaseCntr == 4)\r\n        {\r\n            initBrainWave();\r\n            // animacia vlny + vystrel do vsetkych stran projektil s tagom brain a malym colliderom, co uberie HP\r\n            // zastav brain ked je v strede\r\n        }\r\n        \r\n        if (phaseCntr == 5)\r\n        {\r\n            initBrainFreeze();\r\n            // zmen tint na nieco modro biele, zablokuj repair a spust korutinu co na konci nastavi ze sa moze repairovat wall\r\n        }\r\n        \r\n\r\n        // rozhodnutie pre novy smer\r\n        decideDirection();\r\n\r\n        // kliknutie prida resources\r\n        if (Input.GetMouseButtonDown(0))\r\n        {\r\n            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);\r\n            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);\r\n\r\n            if (hit.collider != null && hit.collider.transform == transform)\r\n            {\r\n                PlayerPrefs.SetInt(\"resources\", PlayerPrefs.GetInt(\"resources\") + currentResourceIncome);\r\n            }\r\n        }\r\n    }\r\n\r\n    private void initGoldRush()\r\n    {\r\n        currentSpeed = goldRushSpeed;\r\n        currentResourceIncome = goldRushResourceIncome;\r\n        currentDamage = goldRushDamage;\r\n        GetComponent<SpriteRenderer>().enabled = true;\r\n    }\r\n    private void initBrainFog()\r\n    {\r\n        currentSpeed = normalSpeed;\r\n        currentResourceIncome = normalResourceIncome;\r\n        currentDamage = brainFogDamage;\r\n        GetComponent<SpriteRenderer>().enabled = false;\r\n    }\r\n    \r\n    private void initBrainWave()\r\n    {\r\n        currentSpeed = normalSpeed;\r\n        currentResourceIncome = normalResourceIncome;\r\n        currentDamage = normalDamage;\r\n        GetComponent<SpriteRenderer>().enabled = true;\r\n\r\n    }\r\n    \r\n    private void initBrainFreeze()\r\n    {\r\n        currentSpeed = normalSpeed;\r\n        currentResourceIncome = normalResourceIncome;\r\n        currentDamage = normalDamage;\r\n        GetComponent<SpriteRenderer>().enabled = true;\r\n\r\n    }\r\n    \r\n    \r\n\r\n    private void decideDirection()\r\n    {\r\n        cooldownTimeCntr += Time.deltaTime;\r\n        \r\n        if (!dontResetToMiddle && Vector2.Distance(originPosition.position, transform.position) < 0.1)\r\n        {\r\n            transform.position = originPosition.position;\r\n            rb.velocity = Vector2.zero;\r\n            if (cooldownTimeCntr > currentBrainCooldown)\r\n            {\r\n                var newDirection = possibleDirections[Random.Range(0, 4)];\r\n                rb.velocity = newDirection * currentSpeed;\r\n                dontResetToMiddle = true;\r\n                cooldownTimeCntr = 0;\r\n                currentBrainCooldown -= cooldownReductionRate;\r\n            }\r\n        }\r\n\r\n        if (Vector2.Distance(originPosition.position, transform.position) > 0.1)\r\n        {\r\n            dontResetToMiddle = false;\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/BrainControl.cs b/Assets/Scripts/BrainControl.cs
+--- a/Assets/Scripts/BrainControl.cs	(revision 49a84abe543679b23867f37756470959c961c5c1)
++++ b/Assets/Scripts/BrainControl.cs	(date 1675344799399)
+@@ -1,9 +1,11 @@
++using System;
+ using System.Collections;
+ using System.Collections.Generic;
+ using TMPro;
+ using Unity.VisualScripting;
+ using UnityEditor;
+ using UnityEngine;
++using Random = UnityEngine.Random;
+ 
+ // Your brain remained inside the box, in it's comfort zone. You never let it achieve anything special. 
+ 
+@@ -46,9 +48,14 @@
+     public float goldRushSpeed = 5;
+     public int goldRushResourceIncome = 3;
+     public int goldRushDamage = 1;
++
++    [Header("Brain freeze")] public float frozenTime = 3;
+     
+     public Transform originPosition;
+ 
++    const int BRAIN_FOG_PHASE = 4;
++    const int BRAIN_WAVE_PHASE = 2;
++    private const int BRAIN_FREEZE_PHASE = 1;
+     void Start()
+     {
+         rb = GetComponent<Rigidbody2D>();
+@@ -96,20 +103,21 @@
+             phaseTimer.SetText("" + (int) (timePerPhase - timeCntr));
+         }
+ 
+-        if (phaseCntr == 2)
++        if (phaseCntr == BRAIN_FOG_PHASE)
+         {
+             initBrainFog();
+         }
+         
+-        if (phaseCntr == 4)
++        if (phaseCntr == BRAIN_WAVE_PHASE)
+         {
+             initBrainWave();
+             // animacia vlny + vystrel do vsetkych stran projektil s tagom brain a malym colliderom, co uberie HP
+             // zastav brain ked je v strede
+         }
+         
+-        if (phaseCntr == 5)
++        if (phaseCntr == BRAIN_FREEZE_PHASE)
+         {
++            Debug.Log("FREEEZE");
+             initBrainFreeze();
+             // zmen tint na nieco modro biele, zablokuj repair a spust korutinu co na konci nastavi ze sa moze repairovat wall
+         }
+@@ -154,17 +162,27 @@
+         GetComponent<SpriteRenderer>().enabled = true;
+ 
+     }
+-    
++
+     private void initBrainFreeze()
+     {
+         currentSpeed = normalSpeed;
+         currentResourceIncome = normalResourceIncome;
+         currentDamage = normalDamage;
+         GetComponent<SpriteRenderer>().enabled = true;
++    }
+ 
++    private void OnCollisionEnter(Collision collision)
++    {
++        if (phaseCntr == 5)
++            FreezWall(collision.gameObject);
+     }
+-    
+-    
++
++    private void FreezWall(GameObject wall)
++    {
++        // nastav stenu ktoru sme trafili na nerozbitnu, spusti timer, ktory ju nastavi spat na rozbitnu po frozenTime
++        float invulnerabilityPeriod = frozenTime;
++        wall.GetComponent<WallControl>().PreventRepaor(invulnerabilityPeriod);
++    }
+ 
+     private void decideDirection()
+     {
+Index: Assets/Scripts/WallControl.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using System;\r\nusing TMPro;\r\nusing UnityEngine;\r\nusing UnityEngine.Assertions;\r\n\r\npublic class WallControl : MonoBehaviour\r\n{\r\n    private int currentHp;\r\n\r\n    public int hpPerLevel;\r\n\r\n    // Start is called before the first frame update\r\n    void Start()\r\n    {\r\n        hpPerLevel = PlayerPrefs.GetInt(\"U_Walls\");\r\n        currentHp = PlayerPrefs.GetInt(gameObject.name);\r\n    }\r\n\r\n    // Update is called once per frame\r\n    void Update()\r\n    {\r\n        if (currentHp <= 0)\r\n        {\r\n            gameObject.SetActive(false);\r\n        }\r\n\r\n        if (Input.GetMouseButtonDown(0))\r\n        {\r\n            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);\r\n            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);\r\n\r\n            if (hit.collider != null && hit.collider.transform == transform)\r\n            {\r\n                resolveWallEffect();\r\n            }\r\n        }\r\n    }\r\n\r\n    private void OnCollisionEnter2D(Collision2D collision)\r\n    {\r\n        if (collision.gameObject.tag == \"Brain\")\r\n        {\r\n            currentHp = Mathf.Clamp(currentHp - collision.gameObject.GetComponent<BrainControl>().currentDamage, 0, int.MaxValue);\r\n        }\r\n\r\n        PlayerPrefs.SetInt(gameObject.name, currentHp);\r\n    }\r\n\r\n    public void resolveWallEffect()\r\n    {\r\n        // PlayerPrefs.SetInt(\"repair\", 1);\r\n        if (PlayerPrefs.GetInt(\"repair\") == 1)\r\n        {\r\n            int maxWallHp = 10 + PlayerPrefs.GetInt(\"U_Repair\") * hpPerLevel;\r\n            \r\n            currentHp += PlayerPrefs.GetInt(\"repairCost\");\r\n            if (currentHp >= maxWallHp)\r\n                currentHp = maxWallHp;\r\n            PlayerPrefs.SetInt(gameObject.name, currentHp);\r\n            PlayerPrefs.SetInt(\"resources\", PlayerPrefs.GetInt(\"resources\") - PlayerPrefs.GetInt(\"repairCost\"));\r\n\r\n            PlayerPrefs.SetInt(\"repair\", 0);\r\n        }\r\n        else if (PlayerPrefs.GetInt(\"upgrade\") == 1)\r\n        {\r\n            Debug.Log(\"upgrade\");\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scripts/WallControl.cs b/Assets/Scripts/WallControl.cs
+--- a/Assets/Scripts/WallControl.cs	(revision 49a84abe543679b23867f37756470959c961c5c1)
++++ b/Assets/Scripts/WallControl.cs	(date 1675344799403)
+@@ -6,6 +6,7 @@
+ public class WallControl : MonoBehaviour
+ {
+     private int currentHp;
++    private bool preventRepair = false;
+ 
+     public int hpPerLevel;
+ 
+@@ -66,4 +67,15 @@
+             Debug.Log("upgrade");
+         }
+     }
++
++    public void PreventRepaor(float invulnerabilityPeriod)
++    {
++        preventRepair = true;
++        Invoke("ResetRepairBlock", invulnerabilityPeriod);
++    }
++
++    private void ResetRepairBlock()
++    {
++        preventRepair = false;
++    }
+ }
+\ No newline at end of file
+Index: .idea/.idea.StraightOuttaTheBox/.idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"620d814f-c09a-49ba-85e1-bb31b6dfa284\" name=\"Changes\" comment=\"ani nevjem\">\r\n      <change beforePath=\"$PROJECT_DIR$/Assets/Scripts/WallControl.cs\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Assets/Scripts/WallControl.cs\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"HighlightingSettingsPerFile\">\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/GameManager.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/AspectRatioFitter.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scenes/SampleScene.unity\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Tests/Runtime/Dropdown/DropdownTests.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scenes/SampleScene.unity\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/GameManager.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/GameManager.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/GameManager.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Prefabs/brain.prefab\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7b2a272e51214e2f91bbc4fb4f28eff8159400/15/df4305a5/PlayerPrefs.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/WallControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/WallControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/GameManager.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Tests/Runtime/Canvas/NoActiveCameraInSceneDoesNotCrashEditor.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Prefabs/brain.prefab\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scenes/SampleScene.unity\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/WallControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/WallControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/WallControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Graphic.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Prefabs/brain.prefab\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/WallControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/GameManager.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2L9CVU0OkoQLmsmcTs5O2lFbPoo\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"Discover.Launch.Via.Unity\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\r\n    <property name=\"WebServerToolWindowFactoryState\" value=\"false\" />\r\n    <property name=\"rider.run.widget.enabled.cache\" value=\"false\" />\r\n    <property name=\"settings.editor.selected.configurable\" value=\"configurable.group.appearance\" />\r\n    <property name=\"vue.rearranger.settings.migration\" value=\"true\" />\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Attach to Unity Editor.Attach to Unity Editor\">\r\n    <configuration name=\"Attach to Unity Editor &amp; Play\" type=\"UNITY_DEBUG_RUN_CONFIGURATION\" factoryName=\"UNITY_ATTACH_AND_PLAY\" show_console_on_std_err=\"false\" show_console_on_std_out=\"false\" port=\"50000\" address=\"localhost\">\r\n      <option name=\"allowRunningInParallel\" value=\"false\" />\r\n      <option name=\"listenPortForConnections\" value=\"false\" />\r\n      <option name=\"pid\" />\r\n      <option name=\"projectPathOnTarget\" />\r\n      <option name=\"selectedOptions\">\r\n        <list />\r\n      </option>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Attach to Unity Editor\" type=\"UNITY_DEBUG_RUN_CONFIGURATION\" factoryName=\"Unity Debug\" show_console_on_std_err=\"false\" show_console_on_std_out=\"false\" port=\"50000\" address=\"localhost\">\r\n      <option name=\"allowRunningInParallel\" value=\"false\" />\r\n      <option name=\"listenPortForConnections\" value=\"false\" />\r\n      <option name=\"pid\" />\r\n      <option name=\"projectPathOnTarget\" />\r\n      <option name=\"selectedOptions\">\r\n        <list />\r\n      </option>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"620d814f-c09a-49ba-85e1-bb31b6dfa284\" name=\"Changes\" comment=\"\" />\r\n      <created>1675273939467</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1675273939467</updated>\r\n      <workItem from=\"1675273944705\" duration=\"23913000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"unity project setup\">\r\n      <created>1675273975589</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675273975589</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"gitignore 2\">\r\n      <created>1675274031731</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675274031731</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"idea bs\">\r\n      <created>1675274052303</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675274052303</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"brain script, material rename, walls positions\">\r\n      <created>1675274922171</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675274922171</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"bouncing brain\">\r\n      <created>1675292426135</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675292426135</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"45 angle\">\r\n      <created>1675293355582</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675293355582</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"brain movement\">\r\n      <created>1675302865448</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675302865448</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;Assets/Scenes/SampleScene.unity\">\r\n      <created>1675321042289</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675321042289</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00009\" summary=\"effects setup\">\r\n      <created>1675326101643</created>\r\n      <option name=\"number\" value=\"00009\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00009\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675326101643</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00010\" summary=\"dunno bullshit, dufam ze som nic neprepisal\">\r\n      <created>1675336259620</created>\r\n      <option name=\"number\" value=\"00010\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00010\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675336259620</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00011\" summary=\"small design changes + phase timer\">\r\n      <created>1675337261499</created>\r\n      <option name=\"number\" value=\"00011\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00011\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675337261499</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00012\" summary=\"ani nevjem\">\r\n      <created>1675339867554</created>\r\n      <option name=\"number\" value=\"00012\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00012\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675339867554</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"13\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"UnityCheckinConfiguration\" checkUnsavedScenes=\"true\" />\r\n  <component name=\"UnityProjectConfiguration\" hasMinimizedUI=\"null\" />\r\n  <component name=\"UnityUnitTestConfiguration\" currentTestLauncher=\"EditMode\" />\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <option name=\"CLEAR_INITIAL_COMMIT_MESSAGE\" value=\"true\" />\r\n    <MESSAGE value=\"unity project setup\" />\r\n    <MESSAGE value=\"gitignore 2\" />\r\n    <MESSAGE value=\"idea bs\" />\r\n    <MESSAGE value=\"brain script, material rename, walls positions\" />\r\n    <MESSAGE value=\"bouncing brain\" />\r\n    <MESSAGE value=\"45 angle\" />\r\n    <MESSAGE value=\"brain movement\" />\r\n    <MESSAGE value=\"Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;Assets/Scenes/SampleScene.unity\" />\r\n    <MESSAGE value=\"effects setup\" />\r\n    <MESSAGE value=\"dunno bullshit, dufam ze som nic neprepisal\" />\r\n    <MESSAGE value=\"small design changes + phase timer\" />\r\n    <MESSAGE value=\"ani nevjem\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"ani nevjem\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml b/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml
+--- a/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml	(revision 49a84abe543679b23867f37756470959c961c5c1)
++++ b/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml	(date 1675344337712)
+@@ -1,7 +1,9 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ChangeListManager">
+-    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="ani nevjem">
++    <list default="true" id="620d814f-c09a-49ba-85e1-bb31b6dfa284" name="Changes" comment="oprava opravy">
++      <change beforePath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StraightOuttaTheBox/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/BrainControl.cs" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/Assets/Scripts/WallControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/WallControl.cs" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -12,6 +14,7 @@
+   <component name="HighlightingSettingsPerFile">
+     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/GameManager.cs" root0="SKIP_HIGHLIGHTING" />
+     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Layout/AspectRatioFitter.cs" root0="SKIP_HIGHLIGHTING" />
++    <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scripts/BrainControl.cs" root0="SKIP_HIGHLIGHTING" />
+     <setting file="mock://D:/3_Projects/StraightOuttaTheBox/nutzforbrains/Assets/Scenes/SampleScene.unity" root0="SKIP_HIGHLIGHTING" />
+@@ -183,7 +186,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1675339867554</updated>
+     </task>
+-    <option name="localTasksCounter" value="13" />
++    <task id="LOCAL-00013" summary="oprava opravy">
++      <created>1675340045095</created>
++      <option name="number" value="00013" />
++      <option name="presentableId" value="LOCAL-00013" />
++      <option name="project" value="LOCAL" />
++      <updated>1675340045095</updated>
++    </task>
++    <option name="localTasksCounter" value="14" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -217,6 +227,7 @@
+     <MESSAGE value="dunno bullshit, dufam ze som nic neprepisal" />
+     <MESSAGE value="small design changes + phase timer" />
+     <MESSAGE value="ani nevjem" />
+-    <option name="LAST_COMMIT_MESSAGE" value="ani nevjem" />
++    <MESSAGE value="oprava opravy" />
++    <option name="LAST_COMMIT_MESSAGE" value="oprava opravy" />
+   </component>
+ </project>
+\ No newline at end of file
