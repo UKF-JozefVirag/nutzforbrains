@@ -16,7 +16,7 @@ using Random = UnityEngine.Random;
 public class BrainControl : MonoBehaviour
 {
     private Rigidbody2D rb;
-    
+
     private float cooldownTimeCntr = 0;
 
     public float currentSpeed;
@@ -43,7 +43,7 @@ public class BrainControl : MonoBehaviour
     private int phaseCntr = 0;
 
     [Header("Gold rush")]
-    public float timePerGoldRush = 2;
+    public float timePerGoldRush = 15;
     public int goldRushEveryNthPhase = 3;
     public float goldRushSpeed = 5;
     public int goldRushResourceIncome = 3;
@@ -71,7 +71,7 @@ public class BrainControl : MonoBehaviour
         possibleDirections.Add(Vector2.right);
         possibleDirections.Add(Vector2.down);
         possibleDirections.Add(Vector2.left);
-        
+
         // nastavenie zaciatocneho smeru
         decideDirection();
     }
@@ -149,6 +149,7 @@ public class BrainControl : MonoBehaviour
     }
     private void initBrainFog()
     {
+        AudioManager.instance.PlaySound("fog");
         currentSpeed = normalSpeed;
         currentResourceIncome = normalResourceIncome;
         currentDamage = brainFogDamage;
@@ -157,6 +158,7 @@ public class BrainControl : MonoBehaviour
     
     private void initBrainWave()
     {
+        AudioManager.instance.PlaySound("wave");
         currentSpeed = normalSpeed;
         currentResourceIncome = normalResourceIncome;
         currentDamage = normalDamage;
@@ -166,10 +168,12 @@ public class BrainControl : MonoBehaviour
 
     private void initBrainFreeze()
     {
+        AudioManager.instance.PlaySound("ice-block-hit");
         currentSpeed = normalSpeed;
         currentResourceIncome = normalResourceIncome;
         currentDamage = normalDamage;
         GetComponent<SpriteRenderer>().enabled = true;
+
     }
 
     void OnCollisionEnter2D(Collision2D col)
