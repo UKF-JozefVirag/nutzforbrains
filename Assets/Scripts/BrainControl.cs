@@ -58,9 +58,15 @@ public class BrainControl : MonoBehaviour
 
     [Header("Brain freeze")] public float frozenTime = 3;
     
+    [Header("Brain wave")] 
+    public float missileSpeed = 10;
+    public float missileTorque = 10;
+
+    public GameObject missilePrefab;
+    
     public Transform originPosition;
 
-    const int BRAIN_FOG_PHASE = 4;
+    const int BRAIN_FOG_PHASE = 1;
     const int BRAIN_WAVE_PHASE = 2;
     const int BRAIN_FREEZE_PHASE = 1;
     private const int WIN_PHASE = 5;
@@ -188,6 +194,7 @@ public class BrainControl : MonoBehaviour
     }
     private void initBrainFog()
     {
+        Debug.Log("fog dis");
         gameObject.GetComponent<SpriteRenderer>().color = brainNormal;
         AudioManager.instance.PlaySound("fog");
         fog.SetActive(true);
@@ -204,7 +211,7 @@ public class BrainControl : MonoBehaviour
         fog.SetActive(false);
         currentSpeed = normalSpeed;
         currentResourceIncome = normalResourceIncome;
-        currentDamage = normalDamage;
+        currentDamage = 0;
         GetComponent<SpriteRenderer>().enabled = true;
 
     }
@@ -227,6 +234,11 @@ public class BrainControl : MonoBehaviour
         {
             FreezWall(col.gameObject);
         }
+
+        // if (phaseCntr == BRAIN_WAVE_PHASE)
+        // {
+        //     StartCoroutine(ShootWaveCor());
+        // }
     }
 
     private void FreezWall(GameObject wall)
@@ -234,6 +246,35 @@ public class BrainControl : MonoBehaviour
         // nastav stenu ktoru sme trafili na nerozbitnu, spusti timer, ktory ju nastavi spat na rozbitnu po frozenTime
         float invulnerabilityPeriod = frozenTime;
         wall.GetComponent<WallControl>().PreventRepair(invulnerabilityPeriod);
+    }
+
+    IEnumerator ShootWaveCor()
+    {
+        ShootWave();
+        yield return new WaitForSeconds(3);
+    }
+
+    private void ShootWave()
+    {
+        Debug.Log("shooting");
+        // instanciovat 4 a dat im smer a torque
+        var missileU = Instantiate(missilePrefab, transform.position, Quaternion.identity);
+        missileU.GetComponent<Rigidbody2D>().velocity = Vector2.up * missileSpeed;
+        missileU.GetComponent<Rigidbody2D>().AddTorque(missileTorque);
+        
+        var missileR = Instantiate(missilePrefab, transform.position, Quaternion.identity);
+        missileR.GetComponent<Rigidbody2D>().velocity = Vector2.right * missileSpeed;
+        missileR.GetComponent<Rigidbody2D>().AddTorque(missileTorque);
+        
+        var missileD = Instantiate(missilePrefab, transform.position, Quaternion.identity);
+        missileD.GetComponent<Rigidbody2D>().velocity = Vector2.down * missileSpeed;
+        missileD.GetComponent<Rigidbody2D>().AddTorque(missileTorque);
+        
+        var missileL = Instantiate(missilePrefab, transform.position, Quaternion.identity);
+        missileL.GetComponent<Rigidbody2D>().velocity = Vector2.left * missileSpeed;
+        missileL.GetComponent<Rigidbody2D>().AddTorque(missileTorque);
+        
+        // lerpnut im transparency a vypat RB a collider on collide, potom destroynut
     }
 
     private void decideDirection()

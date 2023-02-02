@@ -24,10 +24,10 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("resources", 200);
 
         
-        PlayerPrefs.SetInt("Wall1", 10); //hp stien
-        PlayerPrefs.SetInt("Wall2", 10);
-        PlayerPrefs.SetInt("Wall3", 10);
-        PlayerPrefs.SetInt("Wall4", 10);
+        PlayerPrefs.SetInt("Wall1", 15); //hp stien
+        PlayerPrefs.SetInt("Wall2", 15);
+        PlayerPrefs.SetInt("Wall3", 15);
+        PlayerPrefs.SetInt("Wall4", 15);
 
         PlayerPrefs.SetInt("Wall1_i", 10); //init hp stien
         PlayerPrefs.SetInt("Wall2_i", 10);
