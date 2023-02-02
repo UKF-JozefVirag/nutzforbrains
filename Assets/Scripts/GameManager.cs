@@ -40,11 +40,8 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("idleCost", 100); // cena idlu
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // Debug.Log(PlayerPrefs.GetInt("incomeCost"));
-
         if (PlayerPrefs.GetInt("resources") < 0)
         {
             PlayerPrefs.SetInt("resources", 0);
@@ -87,7 +84,8 @@ public class GameManager : MonoBehaviour
 
     public void clickRepair()
     {
-        PlayerPrefs.SetInt("U_Repair", 1);
+        // PlayerPrefs.SetInt("U_Repair", 1);
+        PlayerPrefs.SetInt("repair", 1);
     }
 
     public void upgradeRepair()
